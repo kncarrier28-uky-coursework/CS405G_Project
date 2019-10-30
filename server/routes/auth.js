@@ -12,6 +12,14 @@ router.post("/login", function(req, res, next) {
 // res: user object for newly added user, session token, and cookie
 // next: if error, error handler route
 router.post("/register", function(req, res, next) {
+  
+  connection.connect();
+  connection.query('SELECT uName FROM users WHERE uName=req.body.userName', function (error, results) {
+    if (error) throw error;
+    //error message
+  });
+
+  connection.end();
   console.log(req);
 });
 
