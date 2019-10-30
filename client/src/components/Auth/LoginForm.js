@@ -2,26 +2,31 @@ import React from "react";
 import { Field, Control, Label, Input } from "react-bulma-components";
 
 export class LoginForm extends React.Component {
+  constructor(props) {
+    super(props);
+  }
   render() {
     return (
       <div>
-        <p class="is-size-4">Login</p>
+        <p className="is-size-4">Login</p>
         <br />
-        <div class="field">
-          <div class="control">
-            <label class="label">Username</label>
-            <input type="text" class="input" placeholder="Username" />
+        <div className="field">
+          <div className="control">
+            <label className="label">Username</label>
+            <input type="text" className="input" placeholder="Username" />
           </div>
         </div>
-        <div class="field">
-          <div class="control">
-            <label class="label">Password</label>
-            <input type="password" class="input" placeholder="Password" />
+        <div className="field">
+          <div className="control">
+            <label className="label">Password</label>
+            <input type="password" className="input" placeholder="Password" />
           </div>
         </div>
-        <div class="field">
-          <div class="control">
-            <button class="button is-primary">Login</button>
+        <div className="field">
+          <div className="control">
+            <button className="button is-primary" onClick={this.props.onSubmit}>
+              Login
+            </button>
           </div>
         </div>
       </div>
