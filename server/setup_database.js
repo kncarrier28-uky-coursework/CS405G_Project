@@ -6,7 +6,7 @@ var con = mysql.createConnection({
   password: "Ya9pQcM3x7BsRqDX"
 });
 const createDBString =
-  "DROP DATABASE IF EXISTS toyzrus; CREATE DATABASE toyzrus; USE toyzrus;";
+  "DROP DATABASE IF EXISTS toyzrus; CREATE DATABASE toyzrus;";
 const createUserTableString =
   "CREATE TABLE users (uId INT PRIMARY KEY NOT NULL,password VARCHAR(40),uName VARCHAR(40),type VARCHAR(40));";
 const createItemsTableString =
@@ -19,20 +19,25 @@ con.connect(function(err) {
   console.log("Connected!");
   con.query(createDBString, function(error, results) {
     if (error) throw error;
-    else console.log("Results: " + results);
-  });
-  con.query(createUserTableString, function(error, results) {
-    if (error) throw error;
-    else console.log("Results: " + results);
-  });
-  con.query(createItemsTableString, function(error, results) {
-    if (error) throw error;
-    else console.log("Results: " + results);
-  });
-  con.query(createOrdersTableString, function(error, results) {
-    if (error) throw error;
-    else console.log("Results: " + results);
+    else console.log("Database created!");
   });
 });
 
-con.end();
+con = mysql.createConnection({
+  host: "localhost",
+  user: "geoffrey",
+  password: "Ya9pQcM3x7BsRqDX",
+  database: "toyzrus"
+});
+
+con.connect(function(err) {
+  if (err) throw err;
+  console.log("Connected!");
+  con.query(
+    createItemsTableString + createUserTableString + createOrdersTableString,
+    function(error, results) {
+      if (error) throw error;
+      else console.log("Database created!");
+    }
+  );
+});
