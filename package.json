@@ -1,0 +1,23 @@
+{
+  "name": "cs405g_project",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "cd server && npm start",
+    "client": "cd client && npm start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kncarrier28/CS405G_Project.git"
+  },
+  "author": "Alex Reel, Alex Tanner, Michaela Williams, Kenton Carrier",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kncarrier28/CS405G_Project/issues"
+  },
+  "homepage": "https://github.com/kncarrier28/CS405G_Project#readme",
+  "devDependencies": {
+    "concurrently": "^5.0.0"
+  }
+}
