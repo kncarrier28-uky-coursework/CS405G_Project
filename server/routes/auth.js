@@ -25,8 +25,10 @@ router.post("/login", (req, res) => {
   const queryString = `SELECT * FROM users WHERE uName="${userName}"`;
   connection.query(queryString, function(error, results) {
     if (error) throw error;
+    if (results.length != 1) res.sendStatus(501);
     else {
       var user = results[0];
+      console.log(user);
       bcrypt.compare(userName + password, user.password, (err, result) => {
         if (result === true) {
           res.json({
@@ -50,7 +52,10 @@ router.post("/register", function(req, res, next) {
     `SELECT uName FROM users WHERE uName=${req.body.userName}`,
     function(error, results) {
       if (error) throw error;
-      if (results.length > 0) res.body.error = "User already exists.";
+      if (results.length > 0)
+        res.json({
+          error: "User already exists."
+        });
       else {
         bcrypt.hash(
           req.body.userName + req.body.password,
@@ -63,9 +68,9 @@ router.post("/register", function(req, res, next) {
           `INSERT INTO users(uName, password) VALUES ("${req.body.userName}", "${hashedPassword}")`,
           function(error, results) {
             if (error) throw error;
-            res.json = {
+            res.json({
               user: results
-            };
+            });
           }
         );
       }
