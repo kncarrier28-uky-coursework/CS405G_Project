@@ -47,7 +47,7 @@ export class RegisterForm extends React.Component {
 
   render() {
     return (
-      <form>
+      <div>
         <p className="is-size-4">Register</p>
         <br />
         <div className="field">
@@ -96,7 +96,7 @@ export class RegisterForm extends React.Component {
             </button>
           </div>
         </div>
-      </form>
+      </div>
     );
   }
 }
