@@ -26,7 +26,7 @@ export class LoginForm extends React.Component {
     //     hashedPass = hash;
     //   });
     // });
-    fetch("http://localhost:3010/auth/login", {
+    fetch("http://knca244.cs.uky.edu:3010/auth/login", {
       method: "POST",
       credentials: "same-origin",
       headers: {
