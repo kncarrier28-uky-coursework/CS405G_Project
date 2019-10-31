@@ -17,7 +17,6 @@ var router = express.Router();
 // res: user object for matching user, session token, and cookie
 // next: if error, error handler route
 router.post("/login", (req, res) => {
-  connection.connect();
   const userName = req.body.userName;
   const password = req.body.password;
   const queryString = `SELECT * FROM users WHERE uName="${userName}"`;
@@ -38,14 +37,12 @@ router.post("/login", (req, res) => {
       });
     }
   });
-  connection.end();
 });
 
 // req: the username and password of a new user
 // res: user object for newly added user, session token, and cookie
 // next: if error, error handler route
 router.post("/register", function(req, res, next) {
-  connection.connect();
   var hashedPassword = "";
   connection
     .query(
@@ -78,7 +75,6 @@ router.post("/register", function(req, res, next) {
         }
       );
     });
-  connection.end();
 });
 
 // req: the userid of a user
