@@ -2,7 +2,8 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const mysql = require("mysql");
 
-const connection = mysql.createConnection({
+const pool = mysql.createPool({
+  connectionLimit: 10,
   host: "localhost",
   user: "geoffrey",
   password: "Ya9pQcM3x7BsRqDX",
@@ -20,22 +21,27 @@ router.post("/login", (req, res) => {
   const userName = req.body.userName;
   const password = req.body.password;
   const queryString = `SELECT * FROM users WHERE uName="${userName}"`;
-  connection.query(queryString, function(error, results) {
-    if (error) throw error;
-    if (results.length != 1) res.json({});
-    else {
-      var user = results[0];
-      console.log(user);
-      bcrypt.compare(userName + password, user.password, (err, result) => {
-        if (result === true) {
-          res.json({
-            userID: user.uId
-          });
-        } else {
-          // throw error
-        }
-      });
-    }
+  pool.getConnection((err, connection) => {
+    connection.query(queryString, function(error, results) {
+      connection.release;
+      if (error) throw error;
+      if (results.length != 1) res.json({});
+      else {
+        var user = results[0];
+        console.log(user);
+        bcrypt.compare(userName + password, user.password, (err, result) => {
+          if (result === true) {
+            res.json({
+              userID: user.uId
+            });
+          } else {
+            res.json({
+              error: "Bad username password combo"
+            });
+          }
+        });
+      }
+    });
   });
 });
 
@@ -44,10 +50,11 @@ router.post("/login", (req, res) => {
 // next: if error, error handler route
 router.post("/register", function(req, res, next) {
   var hashedPassword = "";
-  connection
-    .query(
+  pool.getConnection((err, connection) => {
+    connection.query(
       `SELECT uName FROM users WHERE uName="${req.body.userName}"`,
       function(error, results) {
+        connection.release();
         if (error) throw error;
         if (results.length > 0)
           res.json({
@@ -58,23 +65,24 @@ router.post("/register", function(req, res, next) {
             req.body.userName + req.body.password,
             saltRounds,
             (err, hash) => {
-              hashedPassword = hash;
+              pool.getConnection((err, connection) => {
+                connection.query(
+                  `INSERT INTO users(uName, password) VALUES ("${req.body.userName}", "${hash}")`,
+                  function(error, results) {
+                    connection.release();
+                    if (error) throw error;
+                    res.json({
+                      userId: results.insertId
+                    });
+                  }
+                );
+              });
             }
           );
         }
       }
-    )
-    .then(() => {
-      connection.query(
-        `INSERT INTO users(uName, password) VALUES ("${req.body.userName}", "${hashedPassword}")`,
-        function(error, results) {
-          if (error) throw error;
-          res.json({
-            userId: results.insertId
-          });
-        }
-      );
-    });
+    );
+  });
 });
 
 // req: the userid of a user
