@@ -7,7 +7,7 @@ var con = mysql.createConnection({
   multipleStatements: true
 });
 const createDBString =
-  "DROP DATABASE IF EXISTS toyzrus; CREATE DATABASE toyzrus;";
+  "DROP DATABASE IF EXISTS toyzrus; CREATE DATABASE toyzrus; USE toyzrus";
 const createUserTableString =
   "CREATE TABLE users (uId INT PRIMARY KEY NOT NULL,password VARCHAR(40),uName VARCHAR(40),type VARCHAR(40));";
 const createItemsTableString =
@@ -18,17 +18,19 @@ const createOrdersTableString =
 con.connect(function(err) {
   if (err) throw err;
   console.log("Connected!");
-  con.query(createDBString, function(error, results) {
-    if (error) throw error;
-    else console.log("Database created!");
-  });
-  con.query(
-    createItemsTableString + createUserTableString + createOrdersTableString,
-    function(error, results) {
-      if (error) throw error;
-      else console.log("Tables created!");
-    }
-  );
 });
+
+con.query(createDBString, function(error, results) {
+  if (error) throw error;
+  else console.log("Database created!");
+});
+
+con.query(
+  createItemsTableString + createUserTableString + createOrdersTableString,
+  function(error, results) {
+    if (error) throw error;
+    else console.log("Tables created!");
+  }
+);
 
 con.end();
