@@ -57,17 +57,13 @@ router.post("/register", function(req, res, next) {
             error: "User already exists."
           });
         else {
-          bcrypt
-            .hash(
-              req.body.userName + req.body.password,
-              saltRounds,
-              (err, hash) => {
-                return hash;
-              }
-            )
-            .then(hash => {
+          bcrypt.hash(
+            req.body.userName + req.body.password,
+            saltRounds,
+            (err, hash) => {
               hashedPassword = hash;
-            });
+            }
+          );
         }
       }
     )
