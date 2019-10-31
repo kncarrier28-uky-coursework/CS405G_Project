@@ -10,7 +10,10 @@ router.post("/login", function(req, res, next) {
     if (error) throw error;
     if(results.length == 0) res.body.error = 'Invalid username and password.';
     else {
-      //login user page
+      connection.query('SELECT uID FROM users WHERE uName = req.body.userName', function (error, resul) {
+        if (error) throw error;
+        res.uId = resul;
+      });
     }
   });
   console.log(req);
