@@ -47,7 +47,7 @@ router.post("/login", (req, res) => {
 router.post("/register", function(req, res, next) {
   connection.connect();
   connection.query(
-    `SELECT uName FROM users WHERE uName=${req.body.userName}`,
+    `SELECT uName FROM users WHERE uName="${req.body.userName}"`,
     function(error, results) {
       if (error) throw error;
       if (results.length > 0)
