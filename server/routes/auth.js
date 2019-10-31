@@ -73,7 +73,7 @@ router.post("/register", function(req, res, next) {
         function(error, results) {
           if (error) throw error;
           res.json({
-            user: results
+            userId: results.insertId
           });
         }
       );
