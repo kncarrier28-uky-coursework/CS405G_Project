@@ -91,11 +91,9 @@ export class RegisterForm extends React.Component {
         </div>
         <div className="field">
           <div className="control">
-            <input
-              type="submit"
-              className="button is-primary"
-              value="Register"
-            />
+            <button className="button is-primary" onClick={this.handleSubmit}>
+              Register
+            </button>
           </div>
         </div>
       </form>
