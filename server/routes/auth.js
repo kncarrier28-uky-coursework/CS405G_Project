@@ -47,35 +47,41 @@ router.post("/login", (req, res) => {
 router.post("/register", function(req, res, next) {
   connection.connect();
   var hashedPassword = "";
-  connection.query(
-    `SELECT uName FROM users WHERE uName="${req.body.userName}"`,
-    function(error, results) {
-      if (error) throw error;
-      if (results.length > 0)
-        res.json({
-          error: "User already exists."
-        });
-      else {
-        bcrypt.hash(
-          req.body.userName + req.body.password,
-          saltRounds,
-          (err, hash) => {
-            hashedPassword = hash;
-          }
-        );
+  connection
+    .query(
+      `SELECT uName FROM users WHERE uName="${req.body.userName}"`,
+      function(error, results) {
+        if (error) throw error;
+        if (results.length > 0)
+          res.json({
+            error: "User already exists."
+          });
+        else {
+          bcrypt
+            .hash(
+              req.body.userName + req.body.password,
+              saltRounds,
+              (err, hash) => {
+                return hash;
+              }
+            )
+            .then(hash => {
+              hashedPassword = hash;
+            });
+        }
       }
-    }
-  );
-
-  connection.query(
-    `INSERT INTO users(uName, password) VALUES ("${req.body.userName}", "${hashedPassword}")`,
-    function(error, results) {
-      if (error) throw error;
-      res.json({
-        user: results
-      });
-    }
-  );
+    )
+    .then(() => {
+      connection.query(
+        `INSERT INTO users(uName, password) VALUES ("${req.body.userName}", "${hashedPassword}")`,
+        function(error, results) {
+          if (error) throw error;
+          res.json({
+            user: results
+          });
+        }
+      );
+    });
   connection.end();
 });
 
