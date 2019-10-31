@@ -22,7 +22,7 @@ router.post("/login", (req, res) => {
   const password = req.body.password;
 
   console.log(userName);
-  const queryString = `SELECT * FROM users WHERE uName=${userName}`;
+  const queryString = `SELECT * FROM users WHERE uName="${userName}"`;
   connection.query(queryString, function(error, results) {
     if (error) throw error;
     else {
@@ -60,7 +60,7 @@ router.post("/register", function(req, res, next) {
           }
         );
         connection.query(
-          `INSERT INTO users(uName, password) VALUES (${req.body.userName}, ${hashedPassword})`,
+          `INSERT INTO users(uName, password) VALUES ("${req.body.userName}", "${hashedPassword}")`,
           function(error, results) {
             if (error) throw error;
             res.json = {
