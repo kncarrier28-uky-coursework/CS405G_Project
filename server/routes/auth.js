@@ -46,6 +46,7 @@ router.post("/login", (req, res) => {
 // next: if error, error handler route
 router.post("/register", function(req, res, next) {
   connection.connect();
+  var hashedPassword = "";
   connection.query(
     `SELECT uName FROM users WHERE uName="${req.body.userName}"`,
     function(error, results) {
@@ -59,19 +60,20 @@ router.post("/register", function(req, res, next) {
           req.body.userName + req.body.password,
           saltRounds,
           (err, hash) => {
-            const hashedPassword = hash;
-          }
-        );
-        connection.query(
-          `INSERT INTO users(uName, password) VALUES ("${req.body.userName}", "${hashedPassword}")`,
-          function(error, results) {
-            if (error) throw error;
-            res.json({
-              user: results
-            });
+            hashedPassword = hash;
           }
         );
       }
+    }
+  );
+
+  connection.query(
+    `INSERT INTO users(uName, password) VALUES ("${req.body.userName}", "${hashedPassword}")`,
+    function(error, results) {
+      if (error) throw error;
+      res.json({
+        user: results
+      });
     }
   );
   connection.end();
