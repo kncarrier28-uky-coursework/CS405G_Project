@@ -9,11 +9,11 @@ var con = mysql.createConnection({
 const createDBString =
   "DROP DATABASE IF EXISTS toyzrus; CREATE DATABASE toyzrus; USE toyzrus";
 const createUserTableString =
-  "CREATE TABLE users (uId INT PRIMARY KEY NOT NULL,password VARCHAR(40),uName VARCHAR(40),type VARCHAR(40));";
+  "CREATE TABLE users (uId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,password VARCHAR(60),uName VARCHAR(40),type VARCHAR(40));";
 const createItemsTableString =
-  "CREATE TABLE items (itemId INT PRIMARY KEY NOT NULL,itemName VARCHAR(40),stock INT,cost INT,saleAmount INT);";
+  "CREATE TABLE items (itemId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,itemName VARCHAR(40),stock INT,cost INT,saleAmount INT);";
 const createOrdersTableString =
-  "CREATE TABLE orders (orderId INT PRIMARY KEY NOT NULL,uId INT,itemId INT,status VARCHAR(20),quantity INT);";
+  "CREATE TABLE orders (orderId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,uId INT,itemId INT,status VARCHAR(20),quantity INT);";
 
 con.connect(function(err) {
   if (err) throw err;

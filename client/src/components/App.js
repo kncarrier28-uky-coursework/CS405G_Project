@@ -8,17 +8,7 @@ import { LoginForm, RegisterForm } from "./Auth";
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.handleLoginClick = this.handleLoginClick.bind(this);
-    this.handleLogoutClick = this.handleLogoutClick.bind(this);
     this.state = { isLoggedIn: false };
-  }
-
-  handleLoginClick() {
-    this.setState({ isLoggedIn: true });
-  }
-
-  handleRegisterClick() {
-    console.log("Register new user");
   }
 
   handleLogoutClick() {
@@ -36,12 +26,12 @@ export default class App extends React.Component {
         <Columns>
           <Columns.Column>
             <Box>
-              <LoginForm onSubmit={this.handleLoginClick} />
+              <LoginForm />
             </Box>
           </Columns.Column>
           <Columns.Column>
             <Box>
-              <RegisterForm onSubmit={this.handleRegisterClick} />
+              <RegisterForm />
             </Box>
           </Columns.Column>
         </Columns>
