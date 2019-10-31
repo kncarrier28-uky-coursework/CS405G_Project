@@ -3,7 +3,8 @@ var mysql = require("mysql");
 var con = mysql.createConnection({
   host: "localhost",
   user: "geoffrey",
-  password: "Ya9pQcM3x7BsRqDX"
+  password: "Ya9pQcM3x7BsRqDX",
+  multipleStatements: true
 });
 const createDBString =
   "DROP DATABASE IF EXISTS toyzrus; CREATE DATABASE toyzrus;";
@@ -21,23 +22,13 @@ con.connect(function(err) {
     if (error) throw error;
     else console.log("Database created!");
   });
-});
-
-con = mysql.createConnection({
-  host: "localhost",
-  user: "geoffrey",
-  password: "Ya9pQcM3x7BsRqDX",
-  database: "toyzrus"
-});
-
-con.connect(function(err) {
-  if (err) throw err;
-  console.log("Connected!");
   con.query(
     createItemsTableString + createUserTableString + createOrdersTableString,
     function(error, results) {
       if (error) throw error;
-      else console.log("Database created!");
+      else console.log("Tables created!");
     }
   );
 });
+
+con.end();
