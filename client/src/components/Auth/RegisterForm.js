@@ -20,8 +20,35 @@ export class RegisterForm extends React.Component {
   }
 
   handleSubmit(event) {
-    alert("An essay was submitted: " + this.state.value);
-    event.preventDefault();
+    if (this.state.password != this.state.passwordConfirm) {
+      console.log("Passwords must match!");
+    } else {
+      var hashedPass = "";
+      bcrypt.genSalt(10, (err, salt) => {
+        bcrypt.hash(this.state.password, salt, (err, hash) => {
+          hashedPass = hash;
+        });
+      });
+      fetch("http://knca244.cs.uky.edu:3010/auth/register", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: {
+          "Content-type": "application/json"
+        },
+        body: JSON.stringify({
+          userName: this.state.username,
+          password: hashedPass
+        })
+      })
+        .then(res => {
+          console.log(res);
+          return res.json();
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => console.log(error));
+    }
   }
 
   render() {

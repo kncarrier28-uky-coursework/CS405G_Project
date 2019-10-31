@@ -20,12 +20,10 @@ router.post("/login", (req, res) => {
   connection.connect();
   const userName = req.body.userName;
   const password = req.body.password;
-
-  console.log(userName);
   const queryString = `SELECT * FROM users WHERE uName="${userName}"`;
   connection.query(queryString, function(error, results) {
     if (error) throw error;
-    if (results.length != 1) res.sendStatus(501);
+    if (results.length != 1) res.json({});
     else {
       var user = results[0];
       console.log(user);
