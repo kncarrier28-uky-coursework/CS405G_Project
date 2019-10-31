@@ -1,5 +1,5 @@
 import React from "react";
-const bcrypt = require("bycrypt");
+const bcrypt = require("bcrypt");
 
 export class LoginForm extends React.Component {
   constructor(props) {
