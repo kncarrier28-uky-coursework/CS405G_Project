@@ -1,5 +1,4 @@
 import React from "react";
-const bcrypt = require("bcryptjs");
 
 export class LoginForm extends React.Component {
   constructor(props) {
@@ -21,12 +20,6 @@ export class LoginForm extends React.Component {
   }
 
   handleSubmit() {
-    var hashedPass = "";
-    bcrypt.genSalt(10, (err, salt) => {
-      bcrypt.hash(this.state.password, salt, (err, hash) => {
-        hashedPass = hash;
-      });
-    });
     fetch("http://knca244.cs.uky.edu:3010/auth/login", {
       method: "POST",
       credentials: "same-origin",
@@ -35,7 +28,7 @@ export class LoginForm extends React.Component {
       },
       body: JSON.stringify({
         userName: this.state.username,
-        password: hashedPass
+        password: this.state.password
       })
     })
       .then(res => {
