@@ -13,7 +13,7 @@ const createUserTableString =
 const createItemsTableString =
   "CREATE TABLE items (itemId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,itemName VARCHAR(40),stock INT,cost INT,saleAmount INT);";
 const createOrdersTableString =
-  "CREATE TABLE orders (orderId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,uId INT,itemId INT,status VARCHAR(20),quantity INT);";
+  "CREATE TABLE orders (orderId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,uId INT,itemId INT,status VARCHAR(20),quantity INT, orderNumber VARCHAR(15));";
 
 con.connect(function(err) {
   if (err) throw err;
