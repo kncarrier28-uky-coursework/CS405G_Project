@@ -21,13 +21,12 @@ const pool = mysql.createPool({
         if (err) throw err;
         connection.query(queryString, function(error, results) {
           connection.release;
-          const queryString = 'SELECT * FROM items';   //all rows in items database
           if (error) throw error;
           else {
             console.log(results);
             //send data to client using json string
             res.json(results);
-            console.log(res.json);
+            //console.log(res.json);
           }
         });
       });
@@ -37,10 +36,15 @@ const pool = mysql.createPool({
 
   router.get("/:itemId", (req, res) => {
     pool.getConnection((err, connection) => {
-      const queryString = `SELECT * FROM items WHERE itemId="${req.body.itemId}"`;
+      const queryString = `SELECT * FROM items WHERE itemId="${req.params.itemId}"`;
       connection.query(queryString, function(error, results) {
         connection.release;
         if (error) throw error;
+        else {
+          console.log(results);
+          //send data to client using json string
+          res.json(results);
+        }
       });
     });
 
