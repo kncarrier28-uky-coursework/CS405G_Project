@@ -18,10 +18,10 @@ const pool = mysql.createPool({
   router.get("/", (req, res) => {
       const queryString = 'SELECT * FROM items';   //all rows in items database
       pool.getConnection((err, connection) => {
-        if (err) throw err;
+        if (err) {console.log(err.message); throw err; }
         connection.query(queryString, function(error, results) {
           connection.release;
-          if (error) throw error;
+          if (error) { console.log (error.message); throw error; }
           else {
             console.log(results);
             //send data to client using json string
@@ -36,10 +36,11 @@ const pool = mysql.createPool({
 
   router.get("/:itemId", (req, res) => {
     pool.getConnection((err, connection) => {
+      if (err) {console.log(err.message); throw err; }
       const queryString = `SELECT * FROM items WHERE itemId="${req.params.itemId}"`;
       connection.query(queryString, function(error, results) {
         connection.release;
-        if (error) throw error;
+        if (error) {console.log(error.message); throw error; }
         else {
           console.log(results);
           //send data to client using json string
