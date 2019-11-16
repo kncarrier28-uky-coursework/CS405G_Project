@@ -26,8 +26,8 @@ const pool = mysql.createPool({
           else {
             console.log(results);
             //send data to client using json string
-            //res.json(results);
-            //console.log(res.json);
+            res.json(results);
+            console.log(res.json);
           }
         });
       });
@@ -36,6 +36,13 @@ const pool = mysql.createPool({
   });
 
   router.get("/:itemId", (req, res) => {
+    pool.getConnection((err, connection) => {
+      const queryString = `SELECT * FROM items WHERE itemId="${req.body.itemId}"`;
+      connection.query(queryString, function(error, results) {
+        connection.release;
+        if (error) throw error;
+      });
+    });
 
     console.log(req.params.itemId);
   });
