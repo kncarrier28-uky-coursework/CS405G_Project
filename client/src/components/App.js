@@ -1,7 +1,7 @@
 import React from "react";
 import "react-bulma-components/dist/react-bulma-components.min.css";
 import { Section } from "react-bulma-components";
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 
 import { NavMenu } from "./NavMenu";
 
@@ -10,6 +10,9 @@ import { LoginPage, CartPage, ItemsPage } from "../pages";
 export default class App extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isAuthenticated: true
+    };
   }
 
   render() {
@@ -18,16 +21,29 @@ export default class App extends React.Component {
         <NavMenu />
         <Switch>
           <Route path="/login">
-            <LoginPage />
+            {this.state.isAuthenticated ? <Redirect to="/" /> : <LoginPage />}
           </Route>
           <Route path="/items">
-            <ItemsPage />
+            {this.state.isAuthenticated ? (
+              <ItemsPage />
+            ) : (
+              <Redirect to="/login" />
+            )}
           </Route>
           <Route path="/cart">
+            {this.state.isAuthenticated ? (
+              <CartPage />
+            ) : (
+              <Redirect to="/login" />
+            )}
             <CartPage />
           </Route>
           <Route path="/">
-            <h2>Test</h2>
+            {this.state.isAuthenticated ? (
+              <Redirect to="/items" />
+            ) : (
+              <Redirect to="/login" />
+            )}
           </Route>
         </Switch>
       </Section>
