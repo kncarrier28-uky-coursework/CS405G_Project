@@ -5,7 +5,7 @@ import { Switch, Route } from "react-router-dom";
 
 import { NavMenu } from "./NavMenu";
 
-import { LoginPage } from "../pages";
+import { LoginPage, CartPage, ItemsPage } from "../pages";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -21,10 +21,10 @@ export default class App extends React.Component {
             <LoginPage />
           </Route>
           <Route path="/items">
-            <h2>Insert Items Page Here</h2>
+            <ItemsPage />
           </Route>
           <Route path="/cart">
-            <h2>Insert Cart Page Here</h2>
+            <CartPage />
           </Route>
           <Route path="/">
             <h2>Test</h2>
