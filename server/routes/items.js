@@ -16,7 +16,7 @@ const pool = mysql.createPool({
   var router = express.Router();
 
   router.get("/", (req, res) => {
-      const queryString = 'SELECT * FROM items';   //all rows in items database
+      const queryString = 'SELECT * FROM items;';   //all rows in items database
       pool.getConnection((err, connection) => {
         if (err) {console.log(err.message); throw err; }
         connection.query(queryString, function(error, results) {
@@ -37,7 +37,7 @@ const pool = mysql.createPool({
   router.get("/:itemId", (req, res) => {
     pool.getConnection((err, connection) => {
       if (err) {console.log(err.message); throw err; }
-      const queryString = `SELECT * FROM items WHERE itemId="${req.params.itemId}"`;
+      const queryString = `SELECT * FROM items WHERE itemId="${req.params.itemId}";`;
       connection.query(queryString, function(error, results) {
         connection.release;
         if (error) {console.log(error.message); throw error; }
