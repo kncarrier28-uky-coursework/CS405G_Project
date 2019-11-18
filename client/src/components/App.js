@@ -1,47 +1,29 @@
 import React from "react";
 import "react-bulma-components/dist/react-bulma-components.min.css";
-import { Section, Columns, Box } from "react-bulma-components";
+import { Section } from "react-bulma-components";
+import { Switch, Route } from "react-router-dom";
 
 import { NavMenu } from "./NavMenu";
-import { LoginForm, RegisterForm } from "./Auth";
+
+import { LoginPage } from "../pages";
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { isLoggedIn: false };
-  }
-
-  handleLogoutClick() {
-    this.setState({ isLoggedIn: false });
   }
 
   render() {
-    const isLoggedIn = this.state.isLoggedIn;
-    let view;
-
-    if (isLoggedIn) {
-      view = <div>Logged In</div>;
-    } else {
-      view = (
-        <Columns>
-          <Columns.Column>
-            <Box>
-              <LoginForm />
-            </Box>
-          </Columns.Column>
-          <Columns.Column>
-            <Box>
-              <RegisterForm />
-            </Box>
-          </Columns.Column>
-        </Columns>
-      );
-    }
-
     return (
       <Section>
         <NavMenu />
-        {view}
+        <Switch>
+          <Route path="/login">
+            <LoginPage />
+          </Route>
+          <Route path="/">
+            <h2>Test</h2>
+          </Route>
+        </Switch>
       </Section>
     );
   }
