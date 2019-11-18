@@ -20,6 +20,12 @@ export default class App extends React.Component {
           <Route path="/login">
             <LoginPage />
           </Route>
+          <Route path="/items">
+            <h2>Insert Items Page Here</h2>
+          </Route>
+          <Route path="/cart">
+            <h2>Insert Cart Page Here</h2>
+          </Route>
           <Route path="/">
             <h2>Test</h2>
           </Route>
