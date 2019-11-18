@@ -1,5 +1,7 @@
 import React from "react";
 
+{/* This button should display different values based on the properties of the
+item being displayed. */}
 export class AddRemoveButton extends React.Component {
   render() {
     if (inCart == True) {
