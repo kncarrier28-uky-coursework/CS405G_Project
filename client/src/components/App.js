@@ -60,7 +60,7 @@ export default class App extends React.Component {
       .then(data => {
         data.error
           ? console.log(data.error)
-          : this.setState({ isAuthenticated: true, userId: data.id });
+          : this.setState({ isAuthenticated: true, userId: data.userId });
       })
       .catch(error => console.log(error));
   }

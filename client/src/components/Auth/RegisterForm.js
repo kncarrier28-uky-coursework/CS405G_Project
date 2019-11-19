@@ -20,7 +20,7 @@ export class RegisterForm extends React.Component {
   }
 
   handleClick(event) {
-    if (this.state.password != this.state.passwordConfirm) {
+    if (this.state.password !== this.state.passwordConfirm) {
       console.log("Passwords must match!");
     } else {
       this.props.handleRegister(this.state.username, this.state.password);

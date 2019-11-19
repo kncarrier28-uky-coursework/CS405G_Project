@@ -31,7 +31,7 @@ export class ItemList extends React.Component {
     let view = [];
     this.state.items.forEach(item => {
       view.push(
-        <div className="column is-one-quarter">
+        <div className="column is-one-quarter" key={item.itemId}>
           <div className="box">
             <Item item={item} />
           </div>

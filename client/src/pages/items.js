@@ -5,10 +5,6 @@ import { ItemList } from "../components/Items";
 import { Item } from "../components/Items";
 
 class ItemsPage extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     let match = this.props.match;
     return (

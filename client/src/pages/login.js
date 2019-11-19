@@ -1,5 +1,4 @@
 import React from "react";
-import { Redirect } from "react-router-dom";
 import { Columns, Box } from "react-bulma-components";
 
 import { LoginForm, RegisterForm } from "../components/Auth";
