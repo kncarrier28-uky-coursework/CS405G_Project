@@ -22,7 +22,7 @@ router.get("/", (req, res) => {
       console.log(err.message);
     }
     connection.query(queryString, function(error, results) {
-      connection.release;
+      connection.release();
       if (error) {
         console.log(error.message);
       } else {
@@ -43,7 +43,7 @@ router.get("/:itemId", (req, res) => {
     }
     const queryString = `SELECT * FROM items WHERE itemId="${req.params.itemId}";`;
     connection.query(queryString, function(error, results) {
-      connection.release;
+      connection.release();
       if (error) {
         console.log(error.message);
         throw error;

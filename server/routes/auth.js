@@ -23,7 +23,7 @@ router.post("/login", (req, res) => {
   const queryString = `SELECT * FROM users WHERE uName="${userName}"`;
   pool.getConnection((err, connection) => {
     connection.query(queryString, function(error, results) {
-      connection.release;
+      connection.release();
       if (error) throw error;
       if (results.length != 1) res.json({});
       else {
