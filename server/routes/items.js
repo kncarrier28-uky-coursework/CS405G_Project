@@ -46,3 +46,4 @@ const pool = mysql.createPool({
   });
 
   module.exports = router;
+ 
