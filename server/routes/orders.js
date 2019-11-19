@@ -27,11 +27,11 @@ router.get("/", (req, res) => {
     });
 });
 
-//change status of orderId record to "canceled"
+//change status of orderId record to "cancelled"
 router.get("/cancel:orderId", (req, res) => {
     pool.getConnection((err, connection) => {
         if (err) {console.log(err.message); throw err; }
-        const cancelString = `UPDATE orders SET status = "canceled" WHERE orderId="${req.params.orderId}";`
+        const cancelString = `UPDATE orders SET status = "cancelled" WHERE orderId="${req.params.orderId}";`
         connection.query(cancelString, function(error, results) {
             if (error) {console.log(error.message); throw error; }
             else {
