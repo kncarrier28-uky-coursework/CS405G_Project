@@ -28,10 +28,8 @@ router.get("/", (req, res) => {
         console.log(error.message);
         throw error;
       } else {
-        console.log(results);
         //send data to client using json string
         res.json(results);
-        //console.log(res.json);
       }
     });
   });
@@ -52,9 +50,8 @@ router.get("/:itemId", (req, res) => {
         console.log(error.message);
         throw error;
       } else {
-        console.log(results);
         //send data to client using json string
-        res.json(results);
+        res.json(results[0]);
       }
     });
   });
