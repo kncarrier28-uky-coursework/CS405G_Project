@@ -19,8 +19,10 @@ router.get("/", (req, res) => {
         connection.query(allItemsString, function(error, results) {
             connection.release;
             if (error) {console.log(error.message); throw error;}
+            else {
             console.log(results);
-            //send data to client using json
+            res.json(results);
+            }
         });
     });
 });
@@ -32,7 +34,10 @@ router.get("/cancel:orderId", (req, res) => {
         const cancelString = `UPDATE orders SET status = "cancelled" WHERE orderId="${req.params.orderId}";`
         connection.query(cancelString, function(error, results) {
             if (error) {console.log(error.message); throw error; }
-            console.log("Record changed.");
+            else {
+                console.log("Record changed.");
+                res.end();
+            }
         });
     });
 });
@@ -44,7 +49,10 @@ router.get("/pending:orderId", (req, res) => {
         const pendingString = `UPDATE orders SET status = "pending" WHERE orderId="${req.params.orderId}";`
         connection.query(pendingString, function(error, results) {
             if (error) {console.log(error.message); throw error; }
-            console.log("Record changed.");
+            else {
+                console.log("Record changed.");
+                res.end();
+            }
         });
     });
 });
@@ -56,7 +64,10 @@ router.get("/shipped:orderId", (req, res) => {
         const shippedString = `UPDATE orders SET status = "shipped" WHERE orderId="${req.params.orderId}";`
         connection.query(shippedString, function(error, results) {
             if (error) {console.log(error.message); throw error; }
-            console.log("Record changed.");
+            else {
+                console.log("Record changed.");
+                res.end();
+            }
         });
     });
 });
