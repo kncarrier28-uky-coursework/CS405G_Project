@@ -24,14 +24,10 @@ const pool = mysql.createPool({
           if (error) { console.log (error.message); throw error; }
           else {
             console.log(results);
-            //send data to client using json string
             res.json(results);
-            //console.log(res.json);
           }
         });
       });
-
-      //send in array (json)
   });
 
   router.get("/:itemId", (req, res) => {
@@ -43,13 +39,10 @@ const pool = mysql.createPool({
         if (error) {console.log(error.message); throw error; }
         else {
           console.log(results);
-          //send data to client using json string
           res.json(results);
         }
       });
     });
-
-    console.log(req.params.itemId);
   });
 
   module.exports = router;
