@@ -1,16 +1,27 @@
 import React from "react";
-import { Switch, Route, useRouteMatch } from "react-router-dom";
+import { Switch, Route, withRouter } from "react-router-dom";
 
-export function ItemsPage() {
-  let match = useRouteMatch();
-  return (
-    <Switch>
-      <Route path={`${match.url}/:itemId`}>
-        <h2>Display Specific Item</h2>
-      </Route>
-      <Route path={match.url}>
-        <h2>Display All Items</h2>
-      </Route>
-    </Switch>
-  );
+import { ItemList } from "../components/Items";
+import { Item } from "../components/Items";
+
+class ItemsPage extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    let match = this.props.match;
+    return (
+      <Switch>
+        <Route path={`${match.url}/:itemId`}>
+          <Item id={match.params.itemId} />
+        </Route>
+        <Route path={match.url}>
+          <ItemList />
+        </Route>
+      </Switch>
+    );
+  }
 }
+
+export default withRouter(ItemsPage);

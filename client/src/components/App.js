@@ -5,7 +5,8 @@ import { Switch, Route, Redirect } from "react-router-dom";
 
 import { NavMenu } from "./NavMenu";
 
-import { LoginPage, CartPage, ItemsPage } from "../pages";
+import ItemsPage from "../pages/items";
+import { LoginPage, CartPage } from "../pages";
 
 export default class App extends React.Component {
   constructor(props) {
