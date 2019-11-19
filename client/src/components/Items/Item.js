@@ -15,7 +15,9 @@ export class Item extends React.Component {
   render() {
     return (
       <div>
-        <Heading>{this.state.item.itemName}</Heading>
+        <Heading className="has-text-centered">
+          {this.state.item.itemName}
+        </Heading>
         <p>{console.log(this.state.item)}</p>
       </div>
     );

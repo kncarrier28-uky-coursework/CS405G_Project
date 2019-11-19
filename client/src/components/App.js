@@ -11,18 +11,72 @@ import { LoginPage, CartPage } from "../pages";
 export default class App extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
-      isAuthenticated: true
+      isAuthenticated: false,
+      userId: null
     };
+
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handleRegister = this.handleRegister.bind(this);
+  }
+
+  handleLogin(username, password) {
+    fetch("http://localhost:3010/auth/login", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({
+        userName: username,
+        password: password
+      })
+    })
+      .then(res => res.json())
+      .then(data => {
+        data.error
+          ? console.log(data.error)
+          : this.setState({ isAuthenticated: true, userId: data.userId });
+      })
+      .catch(error => console.log(error));
+  }
+
+  handleRegister(username, password) {
+    fetch("http://localhost:3010/auth/register", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({
+        userName: username,
+        password: password
+      })
+    })
+      .then(res => res.json())
+      .then(data => {
+        data.error
+          ? console.log(data.error)
+          : this.setState({ isAuthenticated: true, userId: data.id });
+      })
+      .catch(error => console.log(error));
   }
 
   render() {
     return (
       <Section>
-        <NavMenu />
+        <NavMenu userId={this.state.userId} />
         <Switch>
           <Route path="/login">
-            {this.state.isAuthenticated ? <Redirect to="/" /> : <LoginPage />}
+            {this.state.isAuthenticated ? (
+              <Redirect to="/" />
+            ) : (
+              <LoginPage
+                handleLogin={this.handleLogin}
+                handleRegister={this.handleRegister}
+              />
+            )}
           </Route>
           <Route path="/items">
             {this.state.isAuthenticated ? (

@@ -21,7 +21,7 @@ export class ItemList extends React.Component {
   fetchOrderItems(orderNumber) {}
 
   fetchAllItems() {
-    return fetch("http://knca244.cs.uky.edu:3010/items")
+    return fetch("http://localhost:3010/items")
       .then(response => response.json())
       .then(data => this.setState({ items: data }));
   }
@@ -30,17 +30,13 @@ export class ItemList extends React.Component {
     let view = [];
     this.state.items.forEach(item => {
       view.push(
-        <tr key={item.itemId}>
-          <td>
+        <div className="column is-one-quarter">
+          <div className="box">
             <Item item={item} />
-          </td>
-        </tr>
+          </div>
+        </div>
       );
     });
-    return (
-      <table className="table is-fullwidth is-striped">
-        <tbody>{view}</tbody>
-      </table>
-    );
+    return <div className="columns is-multiline">{view}</div>;
   }
 }

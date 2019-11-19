@@ -6,7 +6,7 @@ export class RegisterForm extends React.Component {
     this.state = { username: "", password: "", passwordConfirm: "" };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleChange(event) {
@@ -19,29 +19,11 @@ export class RegisterForm extends React.Component {
     });
   }
 
-  handleSubmit(event) {
+  handleClick(event) {
     if (this.state.password != this.state.passwordConfirm) {
       console.log("Passwords must match!");
     } else {
-      fetch("http://knca244.cs.uky.edu:3010/auth/register", {
-        method: "POST",
-        credentials: "same-origin",
-        headers: {
-          "Content-type": "application/json"
-        },
-        body: JSON.stringify({
-          userName: this.state.username,
-          password: this.state.password
-        })
-      })
-        .then(res => {
-          console.log(res);
-          return res.json();
-        })
-        .then(data => {
-          console.log(data);
-        })
-        .catch(error => console.log(error));
+      this.props.handleRegister(this.state.username, this.state.password);
     }
   }
 
@@ -91,7 +73,7 @@ export class RegisterForm extends React.Component {
         </div>
         <div className="field">
           <div className="control">
-            <button className="button is-primary" onClick={this.handleSubmit}>
+            <button className="button is-primary" onClick={this.handleClick}>
               Register
             </button>
           </div>
