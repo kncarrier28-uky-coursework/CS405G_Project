@@ -6,7 +6,10 @@
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "cd server && npm start",
     "client": "cd client && npm start",
-    "setup_db": "cd server && npm run setup_db"
+    "setup_db": "cd server && npm run setup_db",
+    "build": "concurrently \"npm run build_server\" \"npm run build_client\"",
+    "build_server": "cd server && npm run build",
+    "build_client": "cd client && npm run build"
   },
   "repository": {
     "type": "git",
