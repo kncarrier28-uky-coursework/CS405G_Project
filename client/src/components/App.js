@@ -3,6 +3,8 @@ import "react-bulma-components/dist/react-bulma-components.min.css";
 import { Section } from "react-bulma-components";
 import { Switch, Route, Redirect } from "react-router-dom";
 
+import apiUrl from "../fetchAPI";
+
 import { NavMenu } from "./NavMenu";
 
 import ItemsPage from "../pages/items";
@@ -22,7 +24,7 @@ export default class App extends React.Component {
   }
 
   handleLogin(username, password) {
-    fetch("http://localhost:3010/auth/login", {
+    fetch(apiUrl + "/auth/login", {
       method: "POST",
       credentials: "same-origin",
       headers: {
@@ -43,7 +45,7 @@ export default class App extends React.Component {
   }
 
   handleRegister(username, password) {
-    fetch("http://localhost:3010/auth/register", {
+    fetch(apiUrl + "/auth/register", {
       method: "POST",
       credentials: "same-origin",
       headers: {

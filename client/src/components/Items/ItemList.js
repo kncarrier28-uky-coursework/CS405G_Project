@@ -1,4 +1,5 @@
 import React from "react";
+import apiUrl from "../../fetchAPI";
 
 import { Item } from "./";
 
@@ -21,7 +22,7 @@ export class ItemList extends React.Component {
   fetchOrderItems(orderNumber) {}
 
   fetchAllItems() {
-    return fetch("http://localhost:3010/items")
+    return fetch(apiUrl + "/items")
       .then(response => response.json())
       .then(data => this.setState({ items: data }));
   }
