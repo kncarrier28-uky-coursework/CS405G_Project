@@ -24,6 +24,7 @@ router.post("/login", (req, res) => {
   pool.getConnection((err, connection) => {
     connection.query(queryString, function(error, results) {
       connection.release();
+      console.log(results);
       if (error) throw error;
       if (results.length != 1)
         res.json({ error: "No user with that username/password combination" });
