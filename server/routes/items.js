@@ -16,15 +16,7 @@ const pool = mysql.createPool({
 var router = express.Router();
 
 router.get("/", (req, res) => {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
   const queryString = "SELECT * FROM items;"; //all rows in items database
-=======
-  const queryString = "SELECT * FROM items"; //all rows in items database
->>>>>>> Stashed changes
-=======
-  const queryString = "SELECT * FROM items"; //all rows in items database
->>>>>>> Stashed changes
   pool.getConnection((err, connection) => {
     if (err) {
       console.log(err.message);
@@ -34,21 +26,8 @@ router.get("/", (req, res) => {
       if (error) {
         console.log(error.message);
       } else {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         //send data to client using json string
         res.json(results);
-=======
-=======
->>>>>>> Stashed changes
-        console.log(results);
-        //send data to client using json string
-        res.json(results);
-        //console.log(res.json);
-<<<<<<< Updated upstream
->>>>>>> Stashed changes
-=======
->>>>>>> Stashed changes
       }
     });
   });
@@ -69,20 +48,8 @@ router.get("/:itemId", (req, res) => {
         console.log(error.message);
         throw error;
       } else {
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
         //send data to client using json string
         res.json(results[0]);
-=======
-        console.log(results);
-        //send data to client using json string
-        res.json(results);
->>>>>>> Stashed changes
-=======
-        console.log(results);
-        //send data to client using json string
-        res.json(results);
->>>>>>> Stashed changes
       }
     });
   });
