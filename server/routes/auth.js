@@ -25,7 +25,8 @@ router.post("/login", (req, res) => {
     connection.query(queryString, function(error, results) {
       connection.release();
       if (error) throw error;
-      if (results.length != 1) res.json({});
+      if (results.length != 1)
+        res.json({ error: "No user with that username/password combination" });
       else {
         var user = results[0];
         console.log(user);
