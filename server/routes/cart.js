@@ -1,5 +1,6 @@
 const express = require("express");
 const mysql = require("mysql");
+const randomstring = require("randomstring");
 
 const pool = mysql.createPool({
     connectionLimit: 10,
@@ -15,7 +16,7 @@ const pool = mysql.createPool({
       const itemId = req.body.itemId;
       const quantity = req.body.quantity;
       const userId = req.body.userId;
-      const findOpenCart = `SELECT orderId FROM orders WHERE uId="${userId}" AND status="open";`; 
+      const findOpenCart = `SELECT orderNumber FROM orders WHERE uId="${userId}" AND status="open";`; 
 
       pool.getConnection((err, connection) => {
           connection.query(findOpenCart, function(error, results) {
@@ -24,12 +25,13 @@ const pool = mysql.createPool({
             var orderId;
             var item_existing = 0;
             if (results.length != 1) { //no open cart exists
-                const createCart = `INSERT INTO orders(uId, status) VALUES("${userId}", "open");`
+                var new_orderNum = randomstring.generate(15);
+                const createCart = `INSERT INTO orders(uId, status, orderNumber) VALUES("${userId}", "open", "${new_orderNum}");`;
                 pool.getConnection((err, connection) => {
                     connection.query(createCart, function(error, results) {
                         connection.release;
                         if (error) throw error;
-                        orderId = results.insertId;
+                        orderNumber = results.insertId;
                     });
                 });
             } //create open cart if none exists
@@ -43,10 +45,13 @@ const pool = mysql.createPool({
                         item_existing = results[0].quantity;
                     });
                 });
-            }
+            } //get orderNumber if open cart exists
             var add_item;
-            if (item_existing === 0) {
-                add_item = `INSERT INTO orders(itemId, quantity)`
+            if (item_existing === 0) 
+                add_item = `INSERT INTO orders(itemId, quantity) VALUES(") WHERE orderNumber="${orderNumber}";`
+            else {
+                all_items = item_existing + quantity;
+                add_item = `UPDATE orders SET quantity="${all_items}" WHERE orderNumber="${orderNumber}" AND itemId="${itemId}";`
             }
           })
       })
