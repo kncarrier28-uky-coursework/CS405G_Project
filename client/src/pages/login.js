@@ -3,7 +3,7 @@ import { Columns, Box } from "react-bulma-components";
 
 import { LoginForm, RegisterForm } from "../components/Auth";
 
-export class LoginPage extends React.Component {
+class LoginPage extends React.Component {
   render() {
     return (
       <Columns>
@@ -21,3 +21,5 @@ export class LoginPage extends React.Component {
     );
   }
 }
+
+export default LoginPage;

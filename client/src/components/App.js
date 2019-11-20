@@ -8,7 +8,8 @@ import apiUrl from "../fetchAPI";
 import { NavMenu } from "./NavMenu";
 
 import ItemsPage from "../pages/items";
-import { LoginPage, CartPage } from "../pages";
+import CartPage from "../pages/cart";
+import LoginPage from "../pages/login";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -88,6 +89,7 @@ export default class App extends React.Component {
             )}
           </Route>
           <Route path="/cart">
+            {console.log(this.state.isAuthenticated)}
             {this.state.isAuthenticated ? (
               <CartPage />
             ) : (
