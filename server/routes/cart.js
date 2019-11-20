@@ -10,7 +10,7 @@ const pool = mysql.createPool({
     database: "toyzrus"
   });
 
-  var router = express.router();
+  var router = express.Router();
 
   router.post("/add", (req, res) => {
       const itemId = req.body.itemId;
