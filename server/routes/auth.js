@@ -23,16 +23,16 @@ router.post("/login", (req, res) => {
   const queryString = `SELECT * FROM users WHERE uName="${userName}"`;
   pool.getConnection((err, connection) => {
     connection.query(queryString, function(error, results) {
-      connection.release;
+      connection.release();
       if (error) throw error;
-      if (results.length != 1) res.json({});
+      if (results.length != 1)
+        res.json({ error: "No user with that username/password combination" });
       else {
         var user = results[0];
-        console.log(user);
         bcrypt.compare(userName + password, user.password, (err, result) => {
           if (result === true) {
             res.json({
-              userID: user.uId
+              userId: user.uId
             });
           } else {
             res.json({
@@ -67,7 +67,7 @@ router.post("/register", function(req, res, next) {
             (err, hash) => {
               pool.getConnection((err, connection) => {
                 connection.query(
-                  `INSERT INTO users(uName, password) VALUES ("${req.body.userName}", "${hash}")`,
+                  `INSERT INTO users(uName, password, type) VALUES ("${req.body.userName}", "${hash}", "customer")`,
                   function(error, results) {
                     connection.release();
                     if (error) throw error;

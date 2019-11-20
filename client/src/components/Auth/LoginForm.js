@@ -6,7 +6,7 @@ export class LoginForm extends React.Component {
     this.state = { username: "", password: "" };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   handleChange(event) {
@@ -19,26 +19,8 @@ export class LoginForm extends React.Component {
     });
   }
 
-  handleSubmit() {
-    fetch("http://knca244.cs.uky.edu:3010/auth/login", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: {
-        "Content-type": "application/json"
-      },
-      body: JSON.stringify({
-        userName: this.state.username,
-        password: this.state.password
-      })
-    })
-      .then(res => {
-        console.log(res);
-        return res.json();
-      })
-      .then(data => {
-        console.log(data);
-      })
-      .catch(error => console.log(error));
+  handleClick() {
+    this.props.handleLogin(this.state.username, this.state.password);
   }
 
   render() {
@@ -74,7 +56,7 @@ export class LoginForm extends React.Component {
         </div>
         <div className="field">
           <div className="control">
-            <button className="button is-primary" onClick={this.handleSubmit}>
+            <button className="button is-primary" onClick={this.handleClick}>
               Login
             </button>
           </div>

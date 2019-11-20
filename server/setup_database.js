@@ -11,9 +11,9 @@ const createDBString =
 const createUserTableString =
   "CREATE TABLE users (uId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,password VARCHAR(60),uName VARCHAR(40),type VARCHAR(40));";
 const createItemsTableString =
-  "CREATE TABLE items (itemId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,itemName VARCHAR(40),stock INT,cost INT,saleAmount INT, orderId VARCHAR(15));";
+  "CREATE TABLE items (itemId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,itemName VARCHAR(40),stock INT,cost DECIMAL(38, 2),saleAmount DECIMAL(38, 2));";
 const createOrdersTableString =
-  "CREATE TABLE orders (orderId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,uId INT,itemId INT,status VARCHAR(20),quantity INT);";
+  "CREATE TABLE orders (orderId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,uId INT,itemId INT,status VARCHAR(20),quantity INT, orderNumber VARCHAR(15));";
 
 con.connect(function(err) {
   if (err) throw err;

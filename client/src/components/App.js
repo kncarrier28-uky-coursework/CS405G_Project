@@ -1,47 +1,108 @@
 import React from "react";
 import "react-bulma-components/dist/react-bulma-components.min.css";
-import { Section, Columns, Box } from "react-bulma-components";
+import { Section } from "react-bulma-components";
+import { Switch, Route, Redirect } from "react-router-dom";
+
+import apiUrl from "../fetchAPI";
 
 import { NavMenu } from "./NavMenu";
-import { LoginForm, RegisterForm } from "./Auth";
+
+import ItemsPage from "../pages/items";
+import { LoginPage, CartPage } from "../pages";
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { isLoggedIn: false };
+
+    this.state = {
+      isAuthenticated: false,
+      userId: null
+    };
+
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handleRegister = this.handleRegister.bind(this);
   }
 
-  handleLogoutClick() {
-    this.setState({ isLoggedIn: false });
+  handleLogin(username, password) {
+    fetch(apiUrl + "/auth/login", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({
+        userName: username,
+        password: password
+      })
+    })
+      .then(res => res.json())
+      .then(data => {
+        data.error
+          ? console.log(data.error)
+          : this.setState({ isAuthenticated: true, userId: data.userId });
+      })
+      .catch(error => console.log(error));
+  }
+
+  handleRegister(username, password) {
+    fetch(apiUrl + "/auth/register", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({
+        userName: username,
+        password: password
+      })
+    })
+      .then(res => res.json())
+      .then(data => {
+        data.error
+          ? console.log(data.error)
+          : this.setState({ isAuthenticated: true, userId: data.userId });
+      })
+      .catch(error => console.log(error));
   }
 
   render() {
-    const isLoggedIn = this.state.isLoggedIn;
-    let view;
-
-    if (isLoggedIn) {
-      view = <div>Logged In</div>;
-    } else {
-      view = (
-        <Columns>
-          <Columns.Column>
-            <Box>
-              <LoginForm />
-            </Box>
-          </Columns.Column>
-          <Columns.Column>
-            <Box>
-              <RegisterForm />
-            </Box>
-          </Columns.Column>
-        </Columns>
-      );
-    }
-
     return (
       <Section>
-        <NavMenu />
-        {view}
+        <NavMenu userId={this.state.userId} />
+        <Switch>
+          <Route path="/login">
+            {this.state.isAuthenticated ? (
+              <Redirect to="/" />
+            ) : (
+              <LoginPage
+                handleLogin={this.handleLogin}
+                handleRegister={this.handleRegister}
+              />
+            )}
+          </Route>
+          <Route path="/items">
+            {this.state.isAuthenticated ? (
+              <ItemsPage userId={this.state.userId} />
+            ) : (
+              <Redirect to="/login" />
+            )}
+          </Route>
+          <Route path="/cart">
+            {this.state.isAuthenticated ? (
+              <CartPage />
+            ) : (
+              <Redirect to="/login" />
+            )}
+            <CartPage />
+          </Route>
+          <Route path="/">
+            {this.state.isAuthenticated ? (
+              <Redirect to="/items" />
+            ) : (
+              <Redirect to="/login" />
+            )}
+          </Route>
+        </Switch>
       </Section>
     );
   }
