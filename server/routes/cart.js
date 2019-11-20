@@ -20,7 +20,7 @@ const pool = mysql.createPool({
 
       pool.getConnection((err, connection) => {
           connection.query(findOpenCart, function(error, results) {
-            connection.release;
+            connection.release();
             if (error) throw error;
             var orderId;
             var item_existing = 0;
@@ -29,7 +29,7 @@ const pool = mysql.createPool({
                 const createCart = `INSERT INTO orders(uId, status, orderNumber) VALUES(${userId}, "open", "${new_orderNum}");`;
                 pool.getConnection((err, connection) => {
                     connection.query(createCart, function(error, results) {
-                        connection.release;
+                        connection.release();
                         if (error) throw error;
                         orderNumber = results.insertId;
                     });
@@ -40,7 +40,7 @@ const pool = mysql.createPool({
                 const getExisting = `SELECT quantity FROM orders WHERE orderId=${orderId} AND itemId=${itemId} AND orderNumber="${orderNumber}";`;
                 pool.getConnection((err, connection) => {
                     connection.query(getExisting, function(error, results) {
-                        connection.release;
+                        connection.release();
                         if (error) throw error;
                         item_existing = results[0].quantity;
                     });
@@ -50,7 +50,7 @@ const pool = mysql.createPool({
             const add_item = `UPDATE orders SET quantity=${item_existing} WHERE itemId=${itemId} AND orderNumber="${orderNumber}";`
             pool.getConnection((err, connection) => {
                 connection.query(add_item, function(error, results) {
-                    connection.release;
+                    connection.release();
                     if (error) throw error;
                 });
             });
@@ -60,7 +60,20 @@ const pool = mysql.createPool({
 
   router.post("/remove", (req, res) => {
       pool.getConnection((err, connection) => {
-
-      })
+        const itemId = req.body.itemId;
+        const quantity = req.body.quantity;
+        const userId = req.body.userId;
+        var item_existing;
+        
+        const findCartquanity = `SELECT quantity FROM orders WHERE itemId=${itemId} AND uId=${userId} AND status="open";`;
+        connection.query(findCartquantity, function(error, results) {
+            connection.release();
+            item_existing = results[0].quantity;
+        });
+        item_existing -= quantity;
+        if (item_existing <= 0) {
+            updateItem = `DELETE FROM orders WHERE itemId=${itemId} AND uId=${userId} AND status="open";`
+        }
+    })
   })
 
