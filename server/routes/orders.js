@@ -17,7 +17,7 @@ router.get("/", (req, res) => {
     pool.getConnection((err, connection) => {
         if (err) {console.log(err.message); throw err;}
         connection.query(allItemsString, function(error, results) {
-            connection.release;
+            connection.release();
             if (error) {console.log(error.message); throw error;}
             else {
             console.log(results);
@@ -33,6 +33,7 @@ router.post("/cancel", (req, res) => {
         if (err) {console.log(err.message); throw err; }
         const cancelString = `UPDATE orders SET status = "cancelled" WHERE orderId=${req.body.orderId};`
         connection.query(cancelString, function(error, results) {
+            connection.release();
             if (error) {console.log(error.message); throw error; }
             else {
                 console.log("Record changed.");
@@ -48,6 +49,7 @@ router.post("/pending", (req, res) => {
         if (err) {console.log(err.message); throw err; }
         const pendingString = `UPDATE orders SET status = "pending" WHERE orderId=${req.body.orderId};`
         connection.query(pendingString, function(error, results) {
+            connection.release();
             if (error) {console.log(error.message); throw error; }
             else {
                 console.log("Record changed.");
@@ -63,6 +65,7 @@ router.post("/shipped", (req, res) => {
         if (err) {console.log(err.message); throw err; }
         const shippedString = `UPDATE orders SET status = "shipped" WHERE orderId=${req.body.orderId};`
         connection.query(shippedString, function(error, results) {
+            connection.release();
             if (error) {console.log(error.message); throw error; }
             else {
                 console.log("Record changed.");
