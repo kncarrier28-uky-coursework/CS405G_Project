@@ -68,12 +68,25 @@ const pool = mysql.createPool({
         const findCartquanity = `SELECT quantity FROM orders WHERE itemId=${itemId} AND uId=${userId} AND status="open";`;
         connection.query(findCartquantity, function(error, results) {
             connection.release();
+            if (results.length == 0) {
+                res.json({
+                    error: "Item not in cart."
+                });
+                console.log("Error: Item not in cart.");
+                return;
+            }
             item_existing = results[0].quantity;
         });
         item_existing -= quantity;
-        if (item_existing <= 0) {
+        var updateItem;
+        if (item_existing <= 0) 
             updateItem = `DELETE FROM orders WHERE itemId=${itemId} AND uId=${userId} AND status="open";`
-        }
-    })
-  })
+        else updateItem = `UPDATE orders SET quantity=${item_existing} WHERE itemId=${itemId} AND uId=${userId} AND status="open";`
+        connection.query(updateItem, function(error, results) {
+            connection.release();
+            console.log("Items removed.");
+        });
+    });
+});
 
+module.exports = router;
