@@ -33,7 +33,11 @@ export class ItemList extends React.Component {
       view.push(
         <div className="column is-one-quarter" key={item.itemId}>
           <div className="box">
-            <Item item={item} />
+            <Item
+              item={item}
+              inCart={this.props.inCart || false}
+              userId={this.props.userId}
+            />
           </div>
         </div>
       );

@@ -82,7 +82,7 @@ export default class App extends React.Component {
           </Route>
           <Route path="/items">
             {this.state.isAuthenticated ? (
-              <ItemsPage />
+              <ItemsPage userId={this.state.userId} />
             ) : (
               <Redirect to="/login" />
             )}

@@ -4,10 +4,6 @@ import { Columns, Box } from "react-bulma-components";
 import { LoginForm, RegisterForm } from "../components/Auth";
 
 export class LoginPage extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
       <Columns>
