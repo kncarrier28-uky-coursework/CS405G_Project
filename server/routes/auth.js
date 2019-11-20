@@ -67,7 +67,7 @@ router.post("/register", function(req, res, next) {
             (err, hash) => {
               pool.getConnection((err, connection) => {
                 connection.query(
-                  `INSERT INTO users(uName, password) VALUES ("${req.body.userName}", "${hash}")`,
+                  `INSERT INTO users(uName, password, type) VALUES ("${req.body.userName}", "${hash}", "customer")`,
                   function(error, results) {
                     connection.release();
                     if (error) throw error;
