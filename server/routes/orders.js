@@ -28,10 +28,10 @@ router.get("/", (req, res) => {
 });
 
 //change status of orderId record to "cancelled"
-router.get("/cancel:orderId", (req, res) => {
+router.post("/cancel", (req, res) => {
     pool.getConnection((err, connection) => {
         if (err) {console.log(err.message); throw err; }
-        const cancelString = `UPDATE orders SET status = "cancelled" WHERE orderId="${req.params.orderId}";`
+        const cancelString = `UPDATE orders SET status = "cancelled" WHERE orderId="${req.body.orderId}";`
         connection.query(cancelString, function(error, results) {
             if (error) {console.log(error.message); throw error; }
             else {
@@ -43,10 +43,10 @@ router.get("/cancel:orderId", (req, res) => {
 });
 
 //change status of orderId record to "pending"
-router.get("/pending:orderId", (req, res) => {
+router.post("/pending", (req, res) => {
     pool.getConnection((err, connection) => {
         if (err) {console.log(err.message); throw err; }
-        const pendingString = `UPDATE orders SET status = "pending" WHERE orderId="${req.params.orderId}";`
+        const pendingString = `UPDATE orders SET status = "pending" WHERE orderId="${req.body.orderId}";`
         connection.query(pendingString, function(error, results) {
             if (error) {console.log(error.message); throw error; }
             else {
@@ -58,10 +58,10 @@ router.get("/pending:orderId", (req, res) => {
 });
 
 //change status of orderId to "shipped"
-router.get("/shipped:orderId", (req, res) => {
+router.post("/shipped", (req, res) => {
     pool.getConnection((err, connection) => {
         if (err) {console.log(err.message); throw err; }
-        const shippedString = `UPDATE orders SET status = "shipped" WHERE orderId="${req.params.orderId}";`
+        const shippedString = `UPDATE orders SET status = "shipped" WHERE orderId="${req.body.orderId}";`
         connection.query(shippedString, function(error, results) {
             if (error) {console.log(error.message); throw error; }
             else {
