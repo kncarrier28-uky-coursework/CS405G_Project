@@ -23,16 +23,16 @@ router.post("/login", (req, res) => {
   const queryString = `SELECT * FROM users WHERE uName="${userName}"`;
   pool.getConnection((err, connection) => {
     connection.query(queryString, function(error, results) {
-      connection.release;
+      connection.release();
       if (error) throw error;
-      if (results.length != 1) res.json({});
+      if (results.length != 1)
+        res.json({ error: "No user with that username/password combination" });
       else {
         var user = results[0];
-        console.log(user);
         bcrypt.compare(userName + password, user.password, (err, result) => {
           if (result === true) {
             res.json({
-              userID: user.uId
+              userId: user.uId
             });
           } else {
             res.json({

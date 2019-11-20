@@ -20,13 +20,11 @@ router.get("/", (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.log(err.message);
-      throw err;
     }
     connection.query(queryString, function(error, results) {
-      connection.release;
+      connection.release();
       if (error) {
         console.log(error.message);
-        throw error;
       } else {
         //send data to client using json string
         res.json(results);
@@ -45,7 +43,7 @@ router.get("/:itemId", (req, res) => {
     }
     const queryString = `SELECT * FROM items WHERE itemId="${req.params.itemId}";`;
     connection.query(queryString, function(error, results) {
-      connection.release;
+      connection.release();
       if (error) {
         console.log(error.message);
         throw error;
@@ -55,8 +53,6 @@ router.get("/:itemId", (req, res) => {
       }
     });
   });
-
-  console.log(req.params.itemId);
 });
 
 module.exports = router;
