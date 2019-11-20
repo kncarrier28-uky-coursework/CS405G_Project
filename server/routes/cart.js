@@ -12,11 +12,11 @@ const pool = mysql.createPool({
 
   var router = express.router();
 
-  router.post("/add/", (req, res) => {
+  router.post("/add", (req, res) => {
       const itemId = req.body.itemId;
       const quantity = req.body.quantity;
       const userId = req.body.userId;
-      const findOpenCart = `SELECT orderNumber FROM orders WHERE uId="${userId}" AND status="open";`; 
+      const findOpenCart = `SELECT orderNumber FROM orders WHERE uId=${userId} AND status="open";`; 
 
       pool.getConnection((err, connection) => {
           connection.query(findOpenCart, function(error, results) {
@@ -26,7 +26,7 @@ const pool = mysql.createPool({
             var item_existing = 0;
             if (results.length != 1) { //no open cart exists
                 var new_orderNum = randomstring.generate(15);
-                const createCart = `INSERT INTO orders(uId, status, orderNumber) VALUES("${userId}", "open", "${new_orderNum}");`;
+                const createCart = `INSERT INTO orders(uId, status, orderNumber) VALUES(${userId}, "open", "${new_orderNum}");`;
                 pool.getConnection((err, connection) => {
                     connection.query(createCart, function(error, results) {
                         connection.release;
@@ -37,8 +37,8 @@ const pool = mysql.createPool({
             } //create open cart if none exists
             else {
                 orderId = results[0].orderId;
-                const getExisting = `SELECT quantity FROM orders WHERE uId="${userId}" AND orderId="${orderId}" AND itemId="${itemId}";`;
-                pool.getConnection((err, connect) => {
+                const getExisting = `SELECT quantity FROM orders WHERE orderId=${orderId} AND itemId=${itemId} AND orderNumber="${orderNumber}";`;
+                pool.getConnection((err, connection) => {
                     connection.query(getExisting, function(error, results) {
                         connection.release;
                         if (error) throw error;
@@ -46,14 +46,21 @@ const pool = mysql.createPool({
                     });
                 });
             } //get orderNumber if open cart exists
-            var add_item;
-            if (item_existing === 0) 
-                add_item = `INSERT INTO orders(itemId, quantity) VALUES(") WHERE orderNumber="${orderNumber}";`
-            else {
-                all_items = item_existing + quantity;
-                add_item = `UPDATE orders SET quantity="${all_items}" WHERE orderNumber="${orderNumber}" AND itemId="${itemId}";`
-            }
-          })
-      })
+            item_existing += quantity;
+            const add_item = `UPDATE orders SET quantity=${item_existing} WHERE itemId=${itemId} AND orderNumber="${orderNumber}";`
+            pool.getConnection((err, connection) => {
+                connection.query(add_item, function(error, results) {
+                    connection.release;
+                    if (error) throw error;
+                });
+            });
+          });
+      });
   });
+
+  router.post("/remove", (req, res) => {
+      pool.getConnection((err, connection) => {
+
+      })
+  })
 
