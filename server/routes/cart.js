@@ -129,14 +129,6 @@ router.post("/:userId/remove", (req, res) => {
         });
       }
     });
-    // var updateItem;
-    // if (item_existing <= 0)
-    //   updateItem = `DELETE FROM orders WHERE itemId=${itemId} AND uId=${userId} AND status="open";`;
-    // else
-    //   updateItem = `UPDATE orders SET quantity=${item_existing} WHERE itemId=${itemId} AND uId=${userId} AND status="open";`;
-    // connection.query(updateItem, function(error, results) {
-    //   console.log("Items removed.");
-    // });
   });
 });
 
