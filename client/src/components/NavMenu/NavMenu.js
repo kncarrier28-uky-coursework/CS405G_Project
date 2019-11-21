@@ -11,18 +11,24 @@ export class NavMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: props.userId
+      userId: props.userId,
+      userName: null,
+      userType: null
     };
   }
 
   componentDidUpdate(prevProps) {
     if (this.props.userId !== prevProps.userId) {
-      this.setState({ userId: this.props.userId }, () => {
-        fetch(apiUrl + `/user/${this.state.userId}`)
-          .then(res => res.json())
-          .then(data => console.log(data));
-      });
+      this.setState({ userId: this.props.userId }, this.fetchUser);
     }
+  }
+
+  fetchUser() {
+    fetch(apiUrl + `/users/${this.state.userId}`)
+      .then(res => res.json())
+      .then(data => {
+        this.setState({ userName: data[0].uName, userType: data[0].type });
+      });
   }
 
   render() {
@@ -47,7 +53,7 @@ export class NavMenu extends React.Component {
             </Navbar.Container>
             <div className="navbar-end">
               <Navbar.Item className="has-text-weight-semibold">
-                {this.state.userId}
+                {this.state.userName}
               </Navbar.Item>
               <Navbar.Item renderAs="div" className="has-text-weight-semibold">
                 <Link to="/cart" className="has-text-light">
