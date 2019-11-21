@@ -89,7 +89,6 @@ export default class App extends React.Component {
             )}
           </Route>
           <Route path="/cart">
-            {console.log(this.state.isAuthenticated)}
             {this.state.isAuthenticated ? (
               <CartPage />
             ) : (
