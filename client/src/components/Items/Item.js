@@ -3,15 +3,29 @@ import { Heading } from "react-bulma-components";
 
 import { CartButton } from "./";
 
+import apiUrl from "../../fetchAPI";
+
 export class Item extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      item: null
+      item: null,
+      inCart: props.inCart || false
     };
     props.itemId
       ? (this.state.item.itemId = props.itemId)
       : (this.state.item = props.item);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (prevProps.item !== this.props.item)
+      this.setState({ item: this.props.item });
+  }
+
+  fetchItem() {
+    fetch(apiUrl + `/items/${this.state.itemId}`)
+      .then(res => res.json())
+      .then(data => console.log(data));
   }
 
   render() {
@@ -59,18 +73,28 @@ export class Item extends React.Component {
           {saleView}
           <div className="column">
             <p className="is-size-4">
-              <span className="has-text-weight-semibold">Stock:</span>&nbsp;
-              {this.state.item.stock}
+              <span className="has-text-weight-semibold">
+                {this.state.inCart ? "Quantity" : "Stock"}:
+              </span>
+              &nbsp;
+              {this.state.inCart
+                ? this.state.item.quantity
+                : this.state.item.stock}
             </p>
           </div>
         </div>
         <div className="columns">
           <div className="column  is-vcentered">
             <CartButton
-              inCart={this.props.inCart}
+              inCart={this.state.inCart}
               itemId={this.state.item.itemId}
               userId={this.props.userId}
-              maxEdit={this.state.item.stock}
+              maxEdit={
+                this.state.inCart
+                  ? this.state.item.quantity
+                  : this.state.item.stock
+              }
+              refreshItems={this.props.refreshItems}
             />
           </div>
         </div>
