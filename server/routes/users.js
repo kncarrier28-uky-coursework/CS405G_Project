@@ -17,12 +17,12 @@ router.get("/", function(req, res, next) {
 });
 
 router.get("/:userId", function(req, res, next) {
-  const userInfo = `SELECT * FROM users WHERE uId=${req.params.userId};`;
+  const userInfo = `SELECT uName, type FROM users WHERE uId=${req.params.userId};`;
   pool.getConnection((err, connection) => {
     if (err) throw err;
     connection.query(userInfo, function(error, results) {
       connection.release();
-      if (error) throw error;
+      if (error) console.log(error);
       res.json(results);
     });
   });
