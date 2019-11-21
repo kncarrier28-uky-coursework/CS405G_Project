@@ -47,7 +47,14 @@ router.get("/:userId", (req, res) => {
   pool.getConnection((err, connection) => {
     connection.query(getUserCart, (error, results) => {
       connection.release();
-      console.log(results);
+      var items = [];
+      results.forEach(item => {
+        items.push({ itemId: item.itemId, quantity: item.quantity });
+      });
+      res.json({
+        items: items,
+        orderNumber: req.orderNumber
+      });
     });
   });
 });
