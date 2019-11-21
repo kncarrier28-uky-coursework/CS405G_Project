@@ -14,7 +14,7 @@ var router = express.Router();
 
 router.use("/:userId*", (req, res, next) => {
   const userId = req.params.userId;
-  const findOpenCart = `SELECT orderNumber FROM orders WHERE uId=${userId} AND status="open";`;
+  const findOpenCart = `SELECT DISTINCT orderNumber FROM orders WHERE uId=${userId} AND status="open";`;
   pool.getConnection((err, connection) => {
     connection.query(findOpenCart, function(error, results) {
       connection.release();
@@ -63,22 +63,37 @@ router.post("/:userId/add", (req, res) => {
   const itemId = req.body.itemId;
   const quantity = req.body.quantity;
 
-  orderId = results[0].orderId;
-  const getExisting = `SELECT quantity FROM orders WHERE orderId=${orderId} AND itemId=${itemId} AND orderNumber="${orderNumber}";`;
+  const orderNumber = req.orderNumber;
+
+  const getExisting = `SELECT * FROM orders WHERE orderNumber="${orderNumber}";`;
   pool.getConnection((err, connection) => {
     connection.query(getExisting, function(error, results) {
-      connection.release();
       if (error) throw error;
-      item_existing = results[0].quantity;
-    });
-  });
-  //get orderNumber if open cart exists
-  item_existing += quantity;
-  const add_item = `UPDATE orders SET quantity=${item_existing} WHERE itemId=${itemId} AND orderNumber="${orderNumber}";`;
-  pool.getConnection((err, connection) => {
-    connection.query(add_item, function(error, results) {
-      connection.release();
-      if (error) throw error;
+      if (results.length === 1 && results[0].itemId === null) {
+        const insertFirstItem = `UPDATE orders SET itemId=${itemId}, quantity=${quantity} WHERE orderNumber="${orderNumber}"`;
+        connection.query(insertFirstItem, error => {
+          error ? console.log(error) : res.send();
+          connection.release();
+        });
+      } else {
+        itemInOrder = false;
+        quantityInOrder = 0;
+        results.forEach(item => {
+          if (item.itemId === itemId) {
+            itemInOrder = true;
+            quantityInOrder = item.quantity;
+          }
+        });
+        const addItemQuery = itemInOrder
+          ? `UPDATE orders SET quantity=${req.body.quantity +
+              quantityInOrder} WHERE orderNumber="${orderNumber}" AND itemId=${itemId}`
+          : `INSERT INTO orders(uId, status, orderNumber, itemId, quantity) VALUES(${req.params.userId}, "open", "${orderNumber}", ${itemId}, ${quantity})`;
+        console.log(addItemQuery);
+        connection.query(addItemQuery, error => {
+          error ? console.log(error) : res.send();
+          connection.release();
+        });
+      }
     });
   });
 });
