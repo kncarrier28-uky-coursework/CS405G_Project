@@ -88,7 +88,6 @@ router.post("/:userId/add", (req, res) => {
           ? `UPDATE orders SET quantity=${req.body.quantity +
               quantityInOrder} WHERE orderNumber="${orderNumber}" AND itemId=${itemId}`
           : `INSERT INTO orders(uId, status, orderNumber, itemId, quantity) VALUES(${req.params.userId}, "open", "${orderNumber}", ${itemId}, ${quantity})`;
-        console.log(addItemQuery);
         connection.query(addItemQuery, error => {
           error ? console.log(error) : res.send();
           connection.release();
@@ -99,34 +98,35 @@ router.post("/:userId/add", (req, res) => {
 });
 
 router.post("/:userId/remove", (req, res) => {
-  pool.getConnection((err, connection) => {
-    const itemId = req.body.itemId;
-    const quantity = req.body.quantity;
-    const userId = req.body.userId;
-    var item_existing;
+  const itemId = req.body.itemId;
+  const quantity = req.body.quantity;
+  const orderNumber = req.orderNumber;
 
-    const findCartquanity = `SELECT quantity FROM orders WHERE itemId=${itemId} AND uId=${userId} AND status="open";`;
+  pool.getConnection((err, connection) => {
+    const findCartquantity = `SELECT quantity FROM orders WHERE itemId=${itemId} AND orderNumber="${orderNumber}";`;
     connection.query(findCartquantity, function(error, results) {
-      connection.release();
-      if (results.length == 0) {
-        res.json({
-          error: "Item not in cart."
+      const currentQuantity = results[0].quantity;
+      if (currentQuantity <= quantity) {
+        const removeQuery = `DELETE from orders`;
+        res.send("Not Remnoved");
+        connection.release();
+      } else {
+        const removeQuery = `UPDATE orders SET quantity=${currentQuantity -
+          quantity} WHERE orderNumber="${orderNumber}" AND itemId=${itemId}`;
+        connection.query(removeQuery, error => {
+          error ? console.log(error) : res.send("Removed");
+          connection.release();
         });
-        console.log("Error: Item not in cart.");
-        return;
       }
-      item_existing = results[0].quantity;
     });
-    item_existing -= quantity;
-    var updateItem;
-    if (item_existing <= 0)
-      updateItem = `DELETE FROM orders WHERE itemId=${itemId} AND uId=${userId} AND status="open";`;
-    else
-      updateItem = `UPDATE orders SET quantity=${item_existing} WHERE itemId=${itemId} AND uId=${userId} AND status="open";`;
-    connection.query(updateItem, function(error, results) {
-      connection.release();
-      console.log("Items removed.");
-    });
+    // var updateItem;
+    // if (item_existing <= 0)
+    //   updateItem = `DELETE FROM orders WHERE itemId=${itemId} AND uId=${userId} AND status="open";`;
+    // else
+    //   updateItem = `UPDATE orders SET quantity=${item_existing} WHERE itemId=${itemId} AND uId=${userId} AND status="open";`;
+    // connection.query(updateItem, function(error, results) {
+    //   console.log("Items removed.");
+    // });
   });
 });
 
