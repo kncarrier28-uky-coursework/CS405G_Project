@@ -1,4 +1,7 @@
 import React from "react";
+import ReactDOM from "react-dom";
+
+import { Redirect } from "react-router-dom";
 
 import apiUrl from "../../fetchAPI";
 
@@ -9,18 +12,26 @@ export class CartButton extends React.Component {
     this.state = {
       userId: props.userId,
       itemId: props.itemId,
-      quantity: 1
+      quantity: 1,
+      redirect: false
     };
 
     this.addToCart = this.addToCart.bind(this);
     this.removeFromCart = this.removeFromCart.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.refreshItems = this.refreshItems.bind(this);
+  }
+
+  refreshItems() {
+    this.props.refreshItems();
   }
 
   handleChange(event) {
     const target = event.target;
-    const value = target.value;
+    let value = target.value;
     const name = target.name;
+
+    if (name === "quantity") value = Number(value);
 
     this.setState({
       [name]: value
@@ -28,46 +39,40 @@ export class CartButton extends React.Component {
   }
 
   addToCart() {
-    fetch(apiUrl + "/cart/add", {
+    fetch(apiUrl + `/cart/${this.state.userId}/add`, {
       method: "POST",
       credentials: "same-origin",
       headers: {
         "Content-type": "application/json"
       },
       body: JSON.stringify({
-        userId: this.state.userId,
         itemId: this.state.itemId,
         quantity: this.state.quantity
       })
-    })
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-      });
+    }).then(() => {
+      this.refreshItems();
+      this.setState({ redirect: true });
+    });
   }
 
   removeFromCart() {
-    fetch(apiUrl + "/cart/remove", {
+    fetch(apiUrl + `/cart/${this.state.userId}/remove`, {
       method: "POST",
       credentials: "same-origin",
       headers: {
         "Content-type": "application/json"
       },
       body: JSON.stringify({
-        userId: this.state.userId,
         itemId: this.state.itemId,
         quantity: this.state.quantity
       })
-    })
-      .then(res => res.json())
-      .then(data => {
-        console.log(data);
-      });
+    }).then(() => this.refreshItems());
   }
 
   render() {
     let buttonText = "";
     this.props.inCart ? (buttonText = "Remove") : (buttonText = "Add To Cart");
+    if (this.state.redirect === true) return <Redirect to="/cart" />;
     return (
       <div className="columns">
         <div className="column is-auto">
@@ -82,7 +87,6 @@ export class CartButton extends React.Component {
                 step="1"
                 className="input"
                 value={this.state.quantity}
-                placeholder="Password"
                 onChange={this.handleChange}
               />
             </div>
@@ -93,7 +97,9 @@ export class CartButton extends React.Component {
             <div className="control">
               <label className="label">&nbsp;</label>
               <button
-                className="button is-primary"
+                className={`
+                  button ${this.props.inCart ? "is-danger" : "is-primary"}
+                `}
                 onClick={
                   this.props.inCart ? this.removeFromCart : this.addToCart
                 }

@@ -90,11 +90,10 @@ export default class App extends React.Component {
           </Route>
           <Route path="/cart">
             {this.state.isAuthenticated ? (
-              <CartPage />
+              <CartPage userId={this.state.userId} />
             ) : (
               <Redirect to="/login" />
             )}
-            <CartPage />
           </Route>
           <Route path="/">
             {this.state.isAuthenticated ? (

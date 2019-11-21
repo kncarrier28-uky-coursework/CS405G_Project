@@ -1,5 +1,4 @@
 import React from "react";
-import { Switch, Route, withRouter } from "react-router-dom";
 
 import { ItemList } from "../components/Items";
 
@@ -10,31 +9,45 @@ class CartPage extends React.Component {
     super(props);
 
     this.state = {
+      items: [],
       orderNumber: null
     };
 
-    this.fetchCartOrderNumber = this.fetchCartOrderNumber.bind(this);
+    this.fetchCart = this.fetchCart.bind(this);
   }
 
-  fetchCartOrderNumber() {
+  componentDidMount() {
+    this.fetchCart();
+  }
+
+  fetchCart() {
     fetch(apiUrl + `/cart/${this.props.userId}`)
       .then(res => res.json())
-      .then(data => console.log(data));
+      .then(data => {
+        this.setState({ items: data.items, orderNumber: data.orderNumber });
+      });
   }
 
   render() {
-    let match = this.props.match;
     return (
-      <Switch>
-        <Route path={`${match.path}/confirm`}>
-          <h2>Confirm Order Page</h2>
-        </Route>
-        <Route path={`${match.path}/`}>
-          <ItemList orderNumber={this.state.orderNumber} />
-        </Route>
-      </Switch>
+      <div>
+        <div className="columns">
+          <div className="column">
+            <p className="title">Order Number: {this.state.orderNumber}</p>
+          </div>
+          <div className="column is-narrow">
+            <button className="button is-primary">Place Order</button>
+          </div>
+        </div>
+        <ItemList
+          items={this.state.items}
+          userId={this.props.userId}
+          inCart={true}
+          refreshItems={this.fetchCart}
+        />
+      </div>
     );
   }
 }
 
-export default withRouter(CartPage);
+export default CartPage;
