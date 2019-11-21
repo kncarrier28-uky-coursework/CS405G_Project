@@ -107,9 +107,19 @@ router.post("/:userId/remove", (req, res) => {
     connection.query(findCartquantity, function(error, results) {
       const currentQuantity = results[0].quantity;
       if (currentQuantity <= quantity) {
-        const removeQuery = `DELETE from orders`;
-        res.send("Not Remnoved");
-        connection.release();
+        connection.query(
+          `SELECT COUNT(*) FROM orders WHERE orderNumber="${orderNumber}"`,
+          (error, results) => {
+            const removeQuery =
+              results[0]["COUNT(*)"] === 1
+                ? `UPDATE orders SET quantity=null, itemId=null where orderNumber="${orderNumber}"`
+                : `DELETE FROM orders WHERE orderNumber="${orderNumber}" AND itemId=${itemId}`;
+            connection.query(removeQuery, error => {
+              connection.release();
+              res.send();
+            });
+          }
+        );
       } else {
         const removeQuery = `UPDATE orders SET quantity=${currentQuantity -
           quantity} WHERE orderNumber="${orderNumber}" AND itemId=${itemId}`;
