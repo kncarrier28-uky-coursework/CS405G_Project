@@ -18,7 +18,7 @@ router.use("/:userId*", (req, res, next) => {
   pool.getConnection((err, connection) => {
     connection.query(findOpenCart, function(error, results) {
       connection.release();
-      if (error) throw error;
+      if (error) console.log(error);
       var item_existing = 0;
       if (results.length != 1) {
         //no open cart exists
@@ -42,14 +42,19 @@ router.use("/:userId*", (req, res, next) => {
 });
 
 router.get("/:userId", (req, res) => {
-  const getUserCart = `SELECT * FROM orders WHERE orderNumber="${req.orderNumber}"`;
-  console.log(getUserCart);
+  const getUserCart = `SELECT * FROM orders NATURAL JOIN items WHERE orderNumber="${req.orderNumber}"`;
   pool.getConnection((err, connection) => {
     connection.query(getUserCart, (error, results) => {
       connection.release();
       var items = [];
       results.forEach(item => {
-        items.push({ itemId: item.itemId, quantity: item.quantity });
+        items.push({
+          itemId: item.itemId,
+          quantity: item.quantity,
+          cost: item.cost,
+          saleAmount: item.saleAmount,
+          itemName: item.itemName
+        });
       });
       res.json({
         items: items,
@@ -62,7 +67,6 @@ router.get("/:userId", (req, res) => {
 router.post("/:userId/add", (req, res) => {
   const itemId = req.body.itemId;
   const quantity = req.body.quantity;
-
   const orderNumber = req.orderNumber;
 
   const getExisting = `SELECT * FROM orders WHERE orderNumber="${orderNumber}";`;
@@ -72,8 +76,8 @@ router.post("/:userId/add", (req, res) => {
       if (results.length === 1 && results[0].itemId === null) {
         const insertFirstItem = `UPDATE orders SET itemId=${itemId}, quantity=${quantity} WHERE orderNumber="${orderNumber}"`;
         connection.query(insertFirstItem, error => {
-          error ? console.log(error) : res.send();
           connection.release();
+          error ? console.log(error) : res.send();
         });
       } else {
         itemInOrder = false;
@@ -85,12 +89,12 @@ router.post("/:userId/add", (req, res) => {
           }
         });
         const addItemQuery = itemInOrder
-          ? `UPDATE orders SET quantity=${req.body.quantity +
+          ? `UPDATE orders SET quantity=${quantity +
               quantityInOrder} WHERE orderNumber="${orderNumber}" AND itemId=${itemId}`
           : `INSERT INTO orders(uId, status, orderNumber, itemId, quantity) VALUES(${req.params.userId}, "open", "${orderNumber}", ${itemId}, ${quantity})`;
         connection.query(addItemQuery, error => {
-          error ? console.log(error) : res.send();
           connection.release();
+          error ? console.log(error) : res.send();
         });
       }
     });
@@ -124,8 +128,8 @@ router.post("/:userId/remove", (req, res) => {
         const removeQuery = `UPDATE orders SET quantity=${currentQuantity -
           quantity} WHERE orderNumber="${orderNumber}" AND itemId=${itemId}`;
         connection.query(removeQuery, error => {
-          error ? console.log(error) : res.send("Removed");
           connection.release();
+          error ? console.log(error) : res.send("Removed");
         });
       }
     });

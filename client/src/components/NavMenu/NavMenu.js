@@ -1,5 +1,6 @@
 import React from "react";
 import { Navbar, Heading } from "react-bulma-components";
+import { Link } from "react-router-dom";
 
 import apiUrl from "../../fetchAPI";
 
@@ -28,7 +29,7 @@ export class NavMenu extends React.Component {
     return (
       <Navbar fixed={"top"} className="is-dark">
         <Navbar.Brand>
-          <Navbar.Item renderAs="a" href="#">
+          <Navbar.Item renderAs="a" href="/items">
             <Heading size={3} className="has-text-light">
               ToyzRUs
             </Heading>
@@ -38,18 +39,20 @@ export class NavMenu extends React.Component {
         {this.state.userId ? (
           <Navbar.Menu>
             <Navbar.Container>
-              <Navbar.Item href="/items" className="has-text-weight-semibold">
-                Home
+              <Navbar.Item renderAs="div" className="has-text-weight-semibold">
+                <Link to="/items" className="has-text-light">
+                  Home
+                </Link>
               </Navbar.Item>
             </Navbar.Container>
             <div className="navbar-end">
               <Navbar.Item className="has-text-weight-semibold">
                 {this.state.userId}
               </Navbar.Item>
-              <Navbar.Item href="/cart" className="has-text-weight-semibold">
-                <p>
+              <Navbar.Item renderAs="div" className="has-text-weight-semibold">
+                <Link to="/cart" className="has-text-light">
                   Cart <FontAwesomeIcon icon={faShoppingCart} />
-                </p>
+                </Link>
               </Navbar.Item>
             </div>
           </Navbar.Menu>
