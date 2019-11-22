@@ -11,7 +11,7 @@ export class NavMenu extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: props.userId,
+      userId: props.userId || null,
       userName: null,
       userType: null
     };
@@ -19,7 +19,9 @@ export class NavMenu extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.userId !== prevProps.userId) {
-      this.setState({ userId: this.props.userId }, this.fetchUser);
+      if (this.props.userId !== null)
+        this.setState({ userId: this.props.userId }, this.fetchUser);
+      else this.setState({ userId: this.props.userId });
     }
   }
 
@@ -52,8 +54,26 @@ export class NavMenu extends React.Component {
               </Navbar.Item>
             </Navbar.Container>
             <div className="navbar-end">
-              <Navbar.Item className="has-text-weight-semibold">
-                {this.state.userName}
+              <Navbar.Item dropdown hoverable href="#">
+                <Navbar.Link
+                  arrowless={false}
+                  className="has-text-weight-semibold"
+                >
+                  {this.state.userName}
+                </Navbar.Link>
+                <Navbar.Dropdown>
+                  <Navbar.Item className="has-text-weight-semibold">
+                    <Link to="/orders" className="has-text-dark">
+                      Orders
+                    </Link>
+                  </Navbar.Item>
+                  <Navbar.Item
+                    className="has-text-weight-semibold"
+                    onClick={this.props.handleLogout}
+                  >
+                    Logout
+                  </Navbar.Item>
+                </Navbar.Dropdown>
               </Navbar.Item>
               <Navbar.Item renderAs="div" className="has-text-weight-semibold">
                 <Link to="/cart" className="has-text-light">
