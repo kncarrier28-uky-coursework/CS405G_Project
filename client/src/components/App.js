@@ -22,6 +22,7 @@ export default class App extends React.Component {
 
     this.handleLogin = this.handleLogin.bind(this);
     this.handleRegister = this.handleRegister.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   handleLogin(username, password) {
@@ -66,10 +67,14 @@ export default class App extends React.Component {
       .catch(error => console.log(error));
   }
 
+  handleLogout() {
+    this.setState({ isAuthenticated: false, userId: null });
+  }
+
   render() {
     return (
       <Section>
-        <NavMenu userId={this.state.userId} />
+        <NavMenu userId={this.state.userId} handleLogout={this.handleLogout} />
         <Switch>
           <Route path="/login">
             {this.state.isAuthenticated ? (
@@ -89,6 +94,13 @@ export default class App extends React.Component {
             )}
           </Route>
           <Route path="/cart">
+            {this.state.isAuthenticated ? (
+              <CartPage userId={this.state.userId} />
+            ) : (
+              <Redirect to="/login" />
+            )}
+          </Route>
+          <Route path="/orders">
             {this.state.isAuthenticated ? (
               <CartPage userId={this.state.userId} />
             ) : (
