@@ -32,8 +32,10 @@ router.post("/login", (req, res) => {
         bcrypt.compare(userName + password, user.password, (err, result) => {
           if (result === true) {
             res.json({
-              userId: user.uId
+              userId: user.uId,
+              userType: user.type
             });
+
           } else {
             res.json({
               error: "Bad username password combo"
@@ -71,8 +73,10 @@ router.post("/register", function(req, res, next) {
                   function(error, results) {
                     connection.release();
                     if (error) throw error;
+                    type = "customer";
                     res.json({
-                      userId: results.insertId
+                      userId: results.insertId,
+                      userType: type
                     });
                   }
                 );
