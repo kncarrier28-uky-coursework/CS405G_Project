@@ -29,7 +29,7 @@ export class NavMenu extends React.Component {
     fetch(apiUrl + `/users/${this.state.userId}`)
       .then(res => res.json())
       .then(data => {
-        this.setState({ userName: data[0].uName, userType: data[0].type });
+        this.setState({ userName: data.uName, userType: data.type });
       });
   }
 
@@ -52,6 +52,59 @@ export class NavMenu extends React.Component {
                   Home
                 </Link>
               </Navbar.Item>
+              {this.state.userType === "staff" ||
+              this.state.userType === "manager" ? (
+                <>
+                  <Navbar.Item
+                    renderAs="div"
+                    className="has-text-weight-semibold"
+                  >
+                    <Link to="/staff/orders" className="has-text-light">
+                      Manage Orders
+                    </Link>
+                  </Navbar.Item>
+                  <Navbar.Item
+                    renderAs="div"
+                    className="has-text-weight-semibold"
+                  >
+                    <Link to="/staff/items" className="has-text-light">
+                      Manage Toys
+                    </Link>
+                  </Navbar.Item>
+                </>
+              ) : (
+                <div></div>
+              )}
+              {this.state.userType === "manager" ? (
+                <>
+                  <Navbar.Item
+                    renderAs="div"
+                    className="has-text-weight-semibold"
+                  >
+                    <Link to="/manager/users" className="has-text-light">
+                      Manage Users
+                    </Link>
+                  </Navbar.Item>
+                  <Navbar.Item
+                    renderAs="div"
+                    className="has-text-weight-semibold"
+                  >
+                    <Link to="/manager/sales" className="has-text-light">
+                      Manage Promotions
+                    </Link>
+                  </Navbar.Item>
+                  <Navbar.Item
+                    renderAs="div"
+                    className="has-text-weight-semibold"
+                  >
+                    <Link to="/manager/data" className="has-text-light">
+                      Sales Data
+                    </Link>
+                  </Navbar.Item>
+                </>
+              ) : (
+                <div></div>
+              )}
             </Navbar.Container>
             <div className="navbar-end">
               <Navbar.Item dropdown hoverable href="#">
@@ -64,7 +117,7 @@ export class NavMenu extends React.Component {
                 <Navbar.Dropdown>
                   <Navbar.Item className="has-text-weight-semibold">
                     <Link to="/orders" className="has-text-dark">
-                      Orders
+                      My Orders
                     </Link>
                   </Navbar.Item>
                   <Navbar.Item
