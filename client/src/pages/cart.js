@@ -14,6 +14,7 @@ class CartPage extends React.Component {
     };
 
     this.fetchCart = this.fetchCart.bind(this);
+    this.placeOrder = this.placeOrder.bind(this);
   }
 
   componentDidMount() {
@@ -28,6 +29,19 @@ class CartPage extends React.Component {
       });
   }
 
+  placeOrder() {
+    fetch(apiUrl + `/orders/pending`, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({ orderNumber: this.state.orderNumber })
+    }).then(() => {
+      console.log("Order Placed");
+    });
+  }
+
   render() {
     return (
       <div>
@@ -36,7 +50,9 @@ class CartPage extends React.Component {
             <p className="title">Order Number: {this.state.orderNumber}</p>
           </div>
           <div className="column is-narrow">
-            <button className="button is-primary">Place Order</button>
+            <button className="button is-primary" onClick={this.placeOrder}>
+              Place Order
+            </button>
           </div>
         </div>
         <ItemList
