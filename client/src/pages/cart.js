@@ -1,6 +1,7 @@
 import React from "react";
 
 import { ItemList } from "../components/Items";
+import { Redirect } from "react-router-dom";
 
 import apiUrl from "../fetchAPI";
 
@@ -10,7 +11,8 @@ class CartPage extends React.Component {
 
     this.state = {
       items: [],
-      orderNumber: null
+      orderNumber: null,
+      redirect: false
     };
 
     this.fetchCart = this.fetchCart.bind(this);
@@ -38,11 +40,13 @@ class CartPage extends React.Component {
       },
       body: JSON.stringify({ orderNumber: this.state.orderNumber })
     }).then(() => {
-      console.log("Order Placed");
+      this.setState({ redirect: true });
     });
   }
 
   render() {
+    if (this.state.redirect === true)
+      return <Redirect to={`orders/${this.state.orderNumber}`} />;
     return (
       <div>
         <div className="columns">
