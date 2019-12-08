@@ -38,7 +38,6 @@ router.get("/", (req, res) => {
         results.forEach(order => {
           order.datePlaced = ISODateString(order.datePlaced);
         });
-        console.log(results);
         res.json(results);
       }
     });
@@ -75,7 +74,6 @@ router.get("/:orderNumber", (req, res) => {
             saleAmount: item.saleAmount
           });
         });
-        console.log(orderInfo);
         res.json(orderInfo);
       }
     });
@@ -89,7 +87,7 @@ router.post("/cancel", (req, res) => {
       console.log(err.message);
       throw err;
     }
-    const cancelString = `UPDATE orders SET status = "cancelled" WHERE orderNumber="${req.body.orderNumber}";`;
+    const cancelString = `UPDATE orders SET status = "canceled" WHERE orderNumber="${req.body.orderNumber}";`;
     connection.query(cancelString, function(error, results) {
       connection.release();
       if (error) {
@@ -110,18 +108,41 @@ router.post("/pending", (req, res) => {
       console.log(err.message);
       throw err;
     }
-    const currentDate = ISODateString(new Date());
-    const pendingString = `UPDATE orders SET status = "pending", datePlaced = "${currentDate}" WHERE orderNumber="${req.body.orderNumber}";`;
-    connection.query(pendingString, function(error, results) {
-      connection.release();
-      if (error) {
-        console.log(error.message);
-        throw error;
-      } else {
-        console.log("Record changed.");
-        res.end();
+    connection.query(
+      `SELECT * FROM orders NATURAL JOIN items WHERE orderNumber="${req.body.orderNumber}"`,
+      (error, results) => {
+        let tooMany = false;
+        results.forEach(item => {
+          if (item.quantity > item.stock) {
+            console.log(item.quantity + " > " + item.stock);
+            res.status(500).json({
+              error: `Not enough inventory of ${item.itemName} to complete order`
+            });
+            tooMany = true;
+          }
+        });
+        if (!tooMany) {
+          results.forEach(item => {
+            connection.query(
+              `UPDATE items SET stock=${item.stock -
+                item.quantity} WHERE itemId=${item.itemId}`
+            );
+          });
+          const currentDate = ISODateString(new Date());
+          const pendingString = `UPDATE orders SET status = "pending", datePlaced = "${currentDate}" WHERE orderNumber="${req.body.orderNumber}";`;
+          connection.query(pendingString, function(error, results) {
+            if (error) {
+              console.log(error.message);
+              throw error;
+            } else {
+              console.log("Record changed.");
+              res.end();
+            }
+          });
+        }
+        connection.release();
       }
-    });
+    );
   });
 });
 
@@ -132,7 +153,7 @@ router.post("/shipped", (req, res) => {
       console.log(err.message);
       throw err;
     }
-    const shippedString = `UPDATE orders SET status = "shipped" WHERE orderId=${req.body.orderId};`;
+    const shippedString = `UPDATE orders SET status = "shipped" WHERE orderNumber="${req.body.orderNumber}";`;
     connection.query(shippedString, function(error, results) {
       connection.release();
       if (error) {

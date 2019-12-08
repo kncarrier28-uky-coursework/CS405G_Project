@@ -12,6 +12,7 @@ import CartPage from "../pages/cart";
 import LoginPage from "../pages/login";
 import OrderPage from "../pages/order";
 import OrdersPage from "../pages/orders";
+import ManageOrdersPage from "../pages/manageOrders";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -19,7 +20,8 @@ export default class App extends React.Component {
 
     this.state = {
       isAuthenticated: false,
-      userId: null
+      userId: null,
+      userType: null
     };
 
     this.handleLogin = this.handleLogin.bind(this);
@@ -43,7 +45,11 @@ export default class App extends React.Component {
       .then(data => {
         data.error
           ? console.log(data.error)
-          : this.setState({ isAuthenticated: true, userId: data.userId });
+          : this.setState({
+              isAuthenticated: true,
+              userId: data.userId,
+              userType: data.userType
+            });
       })
       .catch(error => console.log(error));
   }
@@ -64,7 +70,11 @@ export default class App extends React.Component {
       .then(data => {
         data.error
           ? console.log(data.error)
-          : this.setState({ isAuthenticated: true, userId: data.userId });
+          : this.setState({
+              isAuthenticated: true,
+              userId: data.userId,
+              userType: data.userType
+            });
       })
       .catch(error => console.log(error));
   }
@@ -106,6 +116,13 @@ export default class App extends React.Component {
           <Route path="/orders">
             {this.state.isAuthenticated ? (
               <OrdersPage userId={this.state.userId} />
+            ) : (
+              <Redirect to="/login" />
+            )}
+          </Route>
+          <Route path="/staff/orders">
+            {this.state.isAuthenticated && this.state.userType != "customer" ? (
+              <ManageOrdersPage />
             ) : (
               <Redirect to="/login" />
             )}
