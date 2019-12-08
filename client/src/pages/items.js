@@ -33,6 +33,7 @@ class ItemsPage extends React.Component {
         userId={this.props.userId}
         items={this.state.items}
         refreshItems={this.fetchAllItems}
+        inCart={false}
       />
     );
   }

@@ -46,7 +46,7 @@ class CartPage extends React.Component {
 
   render() {
     if (this.state.redirect === true)
-      return <Redirect to={`orders/${this.state.orderNumber}`} />;
+      return <Redirect to={`order/${this.state.orderNumber}`} />;
     return (
       <div>
         <div className="columns">

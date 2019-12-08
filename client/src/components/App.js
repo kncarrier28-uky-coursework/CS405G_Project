@@ -10,6 +10,8 @@ import { NavMenu } from "./NavMenu";
 import ItemsPage from "../pages/items";
 import CartPage from "../pages/cart";
 import LoginPage from "../pages/login";
+import OrderPage from "../pages/order";
+import OrdersPage from "../pages/orders";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -100,9 +102,10 @@ export default class App extends React.Component {
               <Redirect to="/login" />
             )}
           </Route>
+          <Route path="/order/:orderNumber" component={OrderPage} />
           <Route path="/orders">
             {this.state.isAuthenticated ? (
-              <CartPage userId={this.state.userId} />
+              <OrdersPage userId={this.state.userId} />
             ) : (
               <Redirect to="/login" />
             )}

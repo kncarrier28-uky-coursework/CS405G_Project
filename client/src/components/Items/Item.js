@@ -9,9 +9,12 @@ export class Item extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      item: null,
-      inCart: props.inCart || false
+      item: {},
+      inCart: props.inCart
     };
+
+    this.fetchItem = this.fetchItem.bind(this);
+
     props.itemId
       ? (this.state.item.itemId = props.itemId)
       : (this.state.item = props.item);
@@ -22,8 +25,8 @@ export class Item extends React.Component {
       this.setState({ item: this.props.item });
   }
 
-  fetchItem() {
-    fetch(apiUrl + `/items/${this.state.itemId}`)
+  fetchItem(id) {
+    fetch(apiUrl + `/items/${id}`)
       .then(res => res.json())
       .then(data => console.log(data));
   }
@@ -74,30 +77,34 @@ export class Item extends React.Component {
           <div className="column">
             <p className="is-size-4">
               <span className="has-text-weight-semibold">
-                {this.state.inCart ? "Quantity" : "Stock"}:
+                {this.state.inCart !== false ? "Quantity" : "Stock"}:
               </span>
               &nbsp;
-              {this.state.inCart
+              {this.state.inCart !== false
                 ? this.state.item.quantity
                 : this.state.item.stock}
             </p>
           </div>
         </div>
-        <div className="columns">
-          <div className="column  is-vcentered">
-            <CartButton
-              inCart={this.state.inCart}
-              itemId={this.state.item.itemId}
-              userId={this.props.userId}
-              maxEdit={
-                this.state.inCart
-                  ? this.state.item.quantity
-                  : this.state.item.stock
-              }
-              refreshItems={this.props.refreshItems}
-            />
+        {this.props.inCart != null ? (
+          <div className="columns">
+            <div className="column  is-vcentered">
+              <CartButton
+                inCart={this.state.inCart}
+                itemId={this.state.item.itemId}
+                userId={this.props.userId}
+                maxEdit={
+                  this.state.inCart
+                    ? this.state.item.quantity
+                    : this.state.item.stock
+                }
+                refreshItems={this.props.refreshItems}
+              />
+            </div>
           </div>
-        </div>
+        ) : (
+          <></>
+        )}
       </div>
     );
   }

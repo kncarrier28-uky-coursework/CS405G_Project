@@ -38,7 +38,7 @@ router.get("/", (req, res) => {
 //serve specific order
 router.get("/:orderNumber", (req, res) => {
   const orderNumber = req.params.orderNumber;
-  const allItemsString = `SELECT * FROM orders WHERE orderNumber="${orderNumber}";`;
+  const allItemsString = `SELECT * FROM orders NATURAL JOIN items WHERE orderNumber="${orderNumber}";`;
   pool.getConnection((err, connection) => {
     if (err) {
       console.log(err.message);
@@ -58,7 +58,10 @@ router.get("/:orderNumber", (req, res) => {
         results.forEach(item => {
           orderInfo.items.push({
             id: item.itemId,
-            quantity: item.quantity
+            quantity: item.quantity,
+            itemName: item.itemName,
+            cost: item.cost,
+            saleAmount: item.saleAmount
           });
         });
         console.log(orderInfo);
