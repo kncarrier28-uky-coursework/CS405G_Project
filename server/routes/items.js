@@ -55,4 +55,51 @@ router.get("/:itemId", (req, res) => {
   });
 });
 
+// req: itemName, cost, stock
+router.post("/addItem", (req, res) => {
+  const item = req.params.itemName;
+  const cost = req.params.cost;
+  const stock = req.params.stock;
+  const queryString = 'INSERT INTO items (itemName, stock, cost) values ("${item}", "${stock}", "${cost}");';
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.log(err.message);
+    }
+    connection.query(queryString, function(error, results) {
+      connection.release();
+      if (error) {
+        console.log(error.message);
+      } else {
+        //send data to client using json string
+        res.json(results);
+      }
+    });
+  });
+
+  //send in array (json)
+});
+
+// req: itemId and new stock amount
+router.post("/addStock", (req, res) => {
+  const item = req.params.itemId;
+  const newStock = req.params.stock;
+  const queryString = 'UPDATE items SET stock="${newStock}" WHERE itemId="${item}";';
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.log(err.message);
+    }
+    connection.query(queryString, function(error, results) {
+      connection.release();
+      if (error) {
+        console.log(error.message);
+      } else {
+        //send data to client using json string
+        res.json(results);
+      }
+    });
+  });
+
+  //send in array (json)
+});
+
 module.exports = router;
