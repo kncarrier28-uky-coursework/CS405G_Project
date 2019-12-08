@@ -174,7 +174,7 @@ router.post("/shipped", (req, res) => {
             cur_quantity = results[i].stock - items_needed[i][1];
             var updateStock = `UPDATE items set stock=${cur_quantity} WHERE itemId=${cur_itemId};`;
             connection.query(updateStock, function(error, results) {
-              connection.release();
+              
               if (error) {
                 console.log(error.message);
                 throw error;
@@ -184,7 +184,7 @@ router.post("/shipped", (req, res) => {
           //Update order status
           const shippedString = `UPDATE orders SET status = "shipped" WHERE orderNumber="${req.body.orderNumber}";`;
           connection.query(shippedString, function(error, reuslts) {
-            connection.release();
+           
             if (error) {
               console.log(error.message);
               throw error;
@@ -194,6 +194,7 @@ router.post("/shipped", (req, res) => {
         res.json(items_missing);
         res.end();
       });
+      connection.release();
     });
   });
 });
