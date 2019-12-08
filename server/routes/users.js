@@ -23,7 +23,7 @@ router.get("/:userId", function(req, res, next) {
     connection.query(userInfo, function(error, results) {
       connection.release();
       if (error) console.log(error);
-      res.json(results);
+      res.json(results[0]);
     });
   });
 });

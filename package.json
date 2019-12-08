@@ -10,7 +10,8 @@
     "seed_db": "cd server && npm run seed_db",
     "build": "concurrently \"npm run build_server\" \"npm run build_client\"",
     "build_server": "cd server && npm run build",
-    "build_client": "cd client && npm run build"
+    "build_client": "cd client && npm run build",
+    "postinstall": "concurrently \"cd client && npm install\" \"cd server && npm install\""
   },
   "repository": {
     "type": "git",
