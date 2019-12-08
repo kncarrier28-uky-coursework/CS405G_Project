@@ -41,12 +41,12 @@ class OrdersPage extends React.Component {
       </tr>
     ));
     return (
-      <table className="table">
+      <table className="table is-fullwidth">
         <thead>
           <tr>
-            <td>Order</td>
-            <td>Date Placed</td>
-            <td>Status</td>
+            <th>Order</th>
+            <th>Date Placed</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>{orderList}</tbody>
