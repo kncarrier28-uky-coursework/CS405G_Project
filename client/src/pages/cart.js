@@ -39,9 +39,9 @@ class CartPage extends React.Component {
         "Content-type": "application/json"
       },
       body: JSON.stringify({ orderNumber: this.state.orderNumber })
-    }).then(() => {
-      this.setState({ redirect: true });
-    });
+    })
+      .then(() => this.setState({ redirect: true }))
+      .catch(error => console.log(error));
   }
 
   render() {
