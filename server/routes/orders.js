@@ -190,7 +190,31 @@ router.post("/shipped", (req, res) => {
         }
         else {
           console.log("order shipped");
-          //remove items from inventory, change status to shipped
+          var updateStock = ``;
+          var cur_itemId = 0;
+          var cur_quantity = 0;
+          //Remove shipped items from inventory
+          for (i = 0; i < items_needed.length; i++) {
+            cur_itemId = items_needed[i][0];
+            cur_quantity = results[i].stock - items_needed[i][1];
+            var updateStock = `UPDATE items set stock=${cur_quantity} WHERE itemId=${cur_itemId};`;
+            connection.query(updateStock, function(error, results) {
+              connection.release();
+              if (error) {
+                console.log(error.message);
+                throw error;
+              }
+            });
+          }
+          //Update order status
+          const shippedString = `UPDATE orders SET status = "shipped" WHERE orderNumber="${req.body.orderNumber}";`;
+          connection.query(shippedString, function(error, reuslts) {
+            connection.release();
+            if (error) {
+              console.log(error.message);
+              throw error;
+            }
+          });
         }
         res.json(items_missing);
       })
