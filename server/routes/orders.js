@@ -108,40 +108,17 @@ router.post("/pending", (req, res) => {
       console.log(err.message);
       throw err;
     }
-    connection.query(
-      `SELECT * FROM orders NATURAL JOIN items WHERE orderNumber="${req.body.orderNumber}"`,
-      (error, results) => {
-        let tooMany = false;
-        results.forEach(item => {
-          if (item.quantity > item.stock) {
-            console.log(item.quantity + " > " + item.stock);
-            res.status(500).json({
-              error: `Not enough inventory of ${item.itemName} to complete order`
-            });
-            tooMany = true;
-          }
-        });
-        if (!tooMany) {
-          results.forEach(item => {
-            connection.query(
-              `UPDATE items SET stock=${item.stock -
-                item.quantity} WHERE itemId=${item.itemId}`
-            );
-          });
-          const currentDate = ISODateString(new Date());
-          const pendingString = `UPDATE orders SET status = "pending", datePlaced = "${currentDate}" WHERE orderNumber="${req.body.orderNumber}";`;
-          connection.query(pendingString, function(error, results) {
-            if (error) {
-              console.log(error.message);
-              throw error;
-            } else {
-              console.log("Record changed.");
-              res.end();
-            }
-          });
-        }
+    const currentDate = ISODateString(new Date());
+    const pendingString = `UPDATE orders SET status = "pending", datePlaced = "${currentDate}" WHERE orderNumber="${req.body.orderNumber}";`;
+    connection.query(pendingString, function(error, results) {
+      if (error) {
+        console.log(error.message);
+        throw error;
+      } else {
+        console.log("Record changed.");
+        res.end();
       }
-    );
+    });
   });
 });
 
@@ -166,7 +143,9 @@ router.post("/shipped", (req, res) => {
       console.log(items_needed);
       var getInventoryStock = `SELECT itemId, stock FROM items WHERE`;
       for (i = 0; i < results.length; i++) {
-        getInventoryStock += (" itemId=" + items_needed[i][0]);
+        getInventoryStock += (" itemId=" + items_needed[i][0]) + "";
+        if (i < results.length - 1)
+          getInventoryStock += " or";
       }
       getInventoryStock += ';';
       connection.query(getInventoryStock, function(error, results) {
@@ -178,9 +157,7 @@ router.post("/shipped", (req, res) => {
         var cur_index = 0;
         for (i = 0; i < results.length; i++) {
           if (results[i].stock < items_needed[i][1]) {
-            items_missing[cur_index][0] = results[i].itemId;
-            items_missing[cur_index][1] = (items_needed[i][1] - results[i].stock);
-            cur_index += 1;
+            items_missing.push([results[i].itemId, items_needed[i][1] - results[i].stock]);
           }
         }
         if (items_missing.length !== 0) {
@@ -197,6 +174,7 @@ router.post("/shipped", (req, res) => {
             cur_quantity = results[i].stock - items_needed[i][1];
             var updateStock = `UPDATE items set stock=${cur_quantity} WHERE itemId=${cur_itemId};`;
             connection.query(updateStock, function(error, results) {
+              connection.release();
               if (error) {
                 console.log(error.message);
                 throw error;
@@ -206,6 +184,7 @@ router.post("/shipped", (req, res) => {
           //Update order status
           const shippedString = `UPDATE orders SET status = "shipped" WHERE orderNumber="${req.body.orderNumber}";`;
           connection.query(shippedString, function(error, reuslts) {
+            connection.release();
             if (error) {
               console.log(error.message);
               throw error;
@@ -213,6 +192,7 @@ router.post("/shipped", (req, res) => {
           });
         }
         res.json(items_missing);
+        res.end();
       });
     });
   });
