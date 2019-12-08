@@ -32,8 +32,12 @@ class OrdersPage extends React.Component {
         <td>
           <Link to={`order/${order.orderNumber}`}>{order.orderNumber}</Link>
         </td>
-        <td></td>
-        <td>{order.status}</td>
+        <td>{order.datePlaced}</td>
+        <td>
+          {String(order.status)
+            .charAt(0)
+            .toUpperCase() + String(order.status).substring(1)}
+        </td>
       </tr>
     ));
     return (

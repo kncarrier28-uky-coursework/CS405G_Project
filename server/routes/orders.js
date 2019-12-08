@@ -11,10 +11,17 @@ const pool = mysql.createPool({
 
 var router = express.Router();
 
+function ISODateString(d) {
+  function pad(n) {
+    return n < 10 ? "0" + n : n;
+  }
+  return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+}
+
 //serve all orders
 router.get("/", (req, res) => {
   const userId = req.query.userId | null;
-  const allItemsString = `SELECT DISTINCT orderNumber, status FROM orders WHERE ${
+  const allItemsString = `SELECT DISTINCT orderNumber, status, datePlaced FROM orders WHERE ${
     userId ? `uID=${userId} AND` : ""
   } status<>"open";`;
   pool.getConnection((err, connection) => {
@@ -28,6 +35,9 @@ router.get("/", (req, res) => {
         console.log(error.message);
         throw error;
       } else {
+        results.forEach(order => {
+          order.datePlaced = ISODateString(order.datePlaced);
+        });
         console.log(results);
         res.json(results);
       }
@@ -53,6 +63,7 @@ router.get("/:orderNumber", (req, res) => {
         const orderInfo = {
           number: orderNumber,
           status: results[0].status,
+          datePlaced: ISODateString(results[0].datePlaced),
           items: []
         };
         results.forEach(item => {
@@ -78,7 +89,7 @@ router.post("/cancel", (req, res) => {
       console.log(err.message);
       throw err;
     }
-    const cancelString = `UPDATE orders SET status = "cancelled" WHERE orderId=${req.body.orderId};`;
+    const cancelString = `UPDATE orders SET status = "cancelled" WHERE orderNumber="${req.body.orderNumber}";`;
     connection.query(cancelString, function(error, results) {
       connection.release();
       if (error) {
@@ -99,8 +110,8 @@ router.post("/pending", (req, res) => {
       console.log(err.message);
       throw err;
     }
-    console.log(req.body.orderNumber);
-    const pendingString = `UPDATE orders SET status = "pending" WHERE orderNumber="${req.body.orderNumber}";`;
+    const currentDate = ISODateString(new Date());
+    const pendingString = `UPDATE orders SET status = "pending", datePlaced = "${currentDate}" WHERE orderNumber="${req.body.orderNumber}";`;
     connection.query(pendingString, function(error, results) {
       connection.release();
       if (error) {
