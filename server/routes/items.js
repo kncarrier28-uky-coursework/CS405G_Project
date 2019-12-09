@@ -55,4 +55,50 @@ router.get("/:itemId", (req, res) => {
   });
 });
 
+// req: itemName, cost, stock
+router.post("/addItem", (req, res) => {
+  const itemName = req.body.itemName;
+  const cost = req.body.cost;
+  const stock = req.body.stock;
+  const queryString = `INSERT INTO items (itemName, stock, cost, saleAmount) values ("${itemName}", ${stock}, ${cost}, 0);`;
+  console.log(queryString);
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.log(err.message);
+    }
+    connection.query(queryString, function(error, results) {
+      connection.release();
+      if (error) {
+        res.status(500).json(error);
+        console.log(error.message);
+      } else {
+        //send data to client using json string
+        res.end();
+      }
+    });
+  });
+});
+
+// req: itemId and new stock amount
+router.post("/updateStock", (req, res) => {
+  const itemId = req.body.itemId;
+  const newStock = req.body.stock;
+  const queryString = `UPDATE items SET stock="${newStock}" WHERE itemId="${itemId}";`;
+  pool.getConnection((err, connection) => {
+    if (err) {
+      console.log(err.message);
+    }
+    connection.query(queryString, function(error, results) {
+      connection.release();
+      if (error) {
+        res.status(500).json(error);
+        console.log(error.message);
+      } else {
+        //send data to client using json string
+        res.end();
+      }
+    });
+  });
+});
+
 module.exports = router;
