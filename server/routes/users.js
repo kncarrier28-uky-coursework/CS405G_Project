@@ -13,7 +13,14 @@ var router = express.Router();
 
 /* GET all users listing. */
 router.get("/", function(req, res, next) {
-  res.send("respond with a resource");
+  const allUsers = `SELECT uName, type, uId FROM users;`;
+  pool.getConnection((err, connection) => {
+    connection.query(allUsers, (error, results) => {
+      connection.release();
+      if (error) console.log(error.message);
+      res.json(results);
+    });
+  });
 });
 
 router.get("/:userId", function(req, res, next) {
@@ -24,6 +31,20 @@ router.get("/:userId", function(req, res, next) {
       connection.release();
       if (error) console.log(error);
       res.json(results[0]);
+    });
+  });
+});
+
+router.post("/setType", (req, res) => {
+  const userId = req.body.userId;
+  const type = req.body.type;
+  const setType = `UPDATE users SET type="${type}" WHERE uId=${userId}`;
+  pool.getConnection((err, connection) => {
+    if (err) res.status(500).json(err);
+    connection.query(setType, (error, results) => {
+      connection.release();
+      if (error) console.log(error);
+      res.end();
     });
   });
 });
