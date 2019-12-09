@@ -136,18 +136,16 @@ router.post("/shipped", (req, res) => {
         console.log(error.message);
         throw error;
       }
-      var items_needed = [];  
+      var items_needed = [];
       for (i = 0; i < results.length; i++) {
         items_needed.push([results[i].itemId, results[i].quantity]);
       }
-      console.log(items_needed);
       var getInventoryStock = `SELECT itemId, stock FROM items WHERE`;
       for (i = 0; i < results.length; i++) {
-        getInventoryStock += (" itemId=" + items_needed[i][0]) + "";
-        if (i < results.length - 1)
-          getInventoryStock += " or";
+        getInventoryStock += " itemId=" + items_needed[i][0] + "";
+        if (i < results.length - 1) getInventoryStock += " or";
       }
-      getInventoryStock += ';';
+      getInventoryStock += ";";
       connection.query(getInventoryStock, function(error, results) {
         if (error) {
           console.log(error.message);
@@ -157,14 +155,16 @@ router.post("/shipped", (req, res) => {
         var cur_index = 0;
         for (i = 0; i < results.length; i++) {
           if (results[i].stock < items_needed[i][1]) {
-            items_missing.push([results[i].itemId, items_needed[i][1] - results[i].stock]);
+            items_missing.push([
+              results[i].itemId,
+              items_needed[i][1] - results[i].stock
+            ]);
           }
         }
         if (items_missing.length !== 0) {
-          console.log("missing items");
-        }
-        else {
-          console.log("order shipped");
+          res.status(500).json(items_missing);
+        } else {
+          res.end();
           var updateStock = ``;
           var cur_itemId = 0;
           var cur_quantity = 0;
@@ -174,7 +174,6 @@ router.post("/shipped", (req, res) => {
             cur_quantity = results[i].stock - items_needed[i][1];
             var updateStock = `UPDATE items set stock=${cur_quantity} WHERE itemId=${cur_itemId};`;
             connection.query(updateStock, function(error, results) {
-              
               if (error) {
                 console.log(error.message);
                 throw error;
@@ -184,15 +183,12 @@ router.post("/shipped", (req, res) => {
           //Update order status
           const shippedString = `UPDATE orders SET status = "shipped" WHERE orderNumber="${req.body.orderNumber}";`;
           connection.query(shippedString, function(error, reuslts) {
-           
             if (error) {
               console.log(error.message);
               throw error;
             }
           });
         }
-        res.json(items_missing);
-        res.end();
       });
       connection.release();
     });
