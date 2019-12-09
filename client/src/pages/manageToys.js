@@ -40,6 +40,7 @@ class ManageToysPage extends React.Component {
       },
       body: JSON.stringify({
         itemName: this.state.itemName,
+        category: this.state.itemCategory,
         cost: this.state.cost,
         stock: this.state.stock
       })
@@ -63,6 +64,18 @@ class ManageToysPage extends React.Component {
               type="text"
               name="itemName"
               placeholder="New Item Name"
+              onChange={this.handleChange}
+            />
+          </div>
+        </div>
+        <div className="field">
+          <label className="label">Item Category</label>
+          <div className="control">
+            <input
+              className="input"
+              type="text"
+              name="itemCategory"
+              placeholder="Item Category"
               onChange={this.handleChange}
             />
           </div>
