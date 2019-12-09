@@ -108,41 +108,17 @@ router.post("/pending", (req, res) => {
       console.log(err.message);
       throw err;
     }
-    connection.query(
-      `SELECT * FROM orders NATURAL JOIN items WHERE orderNumber="${req.body.orderNumber}"`,
-      (error, results) => {
-        let tooMany = false;
-        results.forEach(item => {
-          if (item.quantity > item.stock) {
-            console.log(item.quantity + " > " + item.stock);
-            res.status(500).json({
-              error: `Not enough inventory of ${item.itemName} to complete order`
-            });
-            tooMany = true;
-          }
-        });
-        if (!tooMany) {
-          results.forEach(item => {
-            connection.query(
-              `UPDATE items SET stock=${item.stock -
-                item.quantity} WHERE itemId=${item.itemId}`
-            );
-          });
-          const currentDate = ISODateString(new Date());
-          const pendingString = `UPDATE orders SET status = "pending", datePlaced = "${currentDate}" WHERE orderNumber="${req.body.orderNumber}";`;
-          connection.query(pendingString, function(error, results) {
-            if (error) {
-              console.log(error.message);
-              throw error;
-            } else {
-              console.log("Record changed.");
-              res.end();
-            }
-          });
-        }
-        connection.release();
+    const currentDate = ISODateString(new Date());
+    const pendingString = `UPDATE orders SET status = "pending", datePlaced = "${currentDate}" WHERE orderNumber="${req.body.orderNumber}";`;
+    connection.query(pendingString, function(error, results) {
+      if (error) {
+        console.log(error.message);
+        throw error;
+      } else {
+        console.log("Record changed.");
+        res.end();
       }
-    );
+    });
   });
 });
 
@@ -153,16 +129,68 @@ router.post("/shipped", (req, res) => {
       console.log(err.message);
       throw err;
     }
-    const shippedString = `UPDATE orders SET status = "shipped" WHERE orderNumber="${req.body.orderNumber}";`;
-    connection.query(shippedString, function(error, results) {
-      connection.release();
+    console.log("in ship");
+    const getQuantities = `SELECT itemId, quantity FROM orders WHERE orderNumber="${req.body.orderNumber}";`;
+    connection.query(getQuantities, function(error, results) {
       if (error) {
         console.log(error.message);
         throw error;
-      } else {
-        console.log("Record changed.");
-        res.end();
       }
+      var items_needed = [];
+      for (i = 0; i < results.length; i++) {
+        items_needed.push([results[i].itemId, results[i].quantity]);
+      }
+      var getInventoryStock = `SELECT itemId, stock FROM items WHERE`;
+      for (i = 0; i < results.length; i++) {
+        getInventoryStock += " itemId=" + items_needed[i][0] + "";
+        if (i < results.length - 1) getInventoryStock += " or";
+      }
+      getInventoryStock += ";";
+      connection.query(getInventoryStock, function(error, results) {
+        if (error) {
+          console.log(error.message);
+          throw error;
+        }
+        var items_missing = [];
+        var cur_index = 0;
+        for (i = 0; i < results.length; i++) {
+          if (results[i].stock < items_needed[i][1]) {
+            items_missing.push([
+              results[i].itemId,
+              items_needed[i][1] - results[i].stock
+            ]);
+          }
+        }
+        if (items_missing.length !== 0) {
+          res.status(500).json(items_missing);
+        } else {
+          res.end();
+          var updateStock = ``;
+          var cur_itemId = 0;
+          var cur_quantity = 0;
+          //Remove shipped items from inventory
+          for (i = 0; i < items_needed.length; i++) {
+            cur_itemId = items_needed[i][0];
+            cur_quantity = results[i].stock - items_needed[i][1];
+            var updateStock = `UPDATE items set stock=${cur_quantity} WHERE itemId=${cur_itemId};`;
+            connection.query(updateStock, function(error, results) {
+              if (error) {
+                console.log(error.message);
+                throw error;
+              }
+            });
+          }
+          //Update order status
+          const shippedString = `UPDATE orders SET status = "shipped" WHERE orderNumber="${req.body.orderNumber}";`;
+          connection.query(shippedString, function(error, reuslts) {
+            if (error) {
+              console.log(error.message);
+              throw error;
+            }
+          });
+        }
+      });
+      connection.release();
     });
   });
 });
