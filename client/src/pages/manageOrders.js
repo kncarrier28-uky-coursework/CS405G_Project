@@ -61,7 +61,7 @@ class ManageOrdersPage extends React.Component {
         this.state.orders.forEach(order => {
           if (order.status === "pending") sortedOrders.push(order);
         });
-      } else if (method == "all") {
+      } else if (method === "all") {
         sortedOrders = this.state.orders;
       } else if (method === "canceled") {
         this.state.orders.forEach(order => {
@@ -119,45 +119,36 @@ class ManageOrdersPage extends React.Component {
       <>
         <div className="level">
           <div className="level-item">
-            <a
-              href="#"
-              className="is-size-3"
+            <button
+              className="button is-link is-large"
               onClick={() => this.sortBy("all")}
             >
               All orders
-            </a>
+            </button>
           </div>
           <div className="level-item">
-            <a
-              href="#"
-              className="is-size-3"
+            <button
+              className="button is-link is-large"
               onClick={() => this.sortBy("pending")}
             >
               Pending orders
-            </a>
+            </button>
           </div>
           <div className="level-item">
-            <a
-              href="#"
-              className="is-size-3"
+            <button
+              className="button is-link is-large"
               onClick={() => this.sortBy("canceled")}
             >
               Canceled orders
-            </a>
+            </button>
           </div>
           <div className="level-item">
-            <a
-              href="#"
-              className="is-size-3"
+            <button
+              className="button is-link is-large"
               onClick={() => this.sortBy("shipped")}
             >
               Shipped orders
-            </a>
-          </div>
-          <div className="level-item">
-            <a href="#" className="is-size-3">
-              Past week
-            </a>
+            </button>
           </div>
         </div>
         <table className="table is-fullwidth">
