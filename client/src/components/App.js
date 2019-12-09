@@ -13,6 +13,7 @@ import LoginPage from "../pages/login";
 import OrderPage from "../pages/order";
 import OrdersPage from "../pages/orders";
 import ManageOrdersPage from "../pages/manageOrders";
+import ManageToysPage from "../pages/manageToys";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -121,8 +122,17 @@ export default class App extends React.Component {
             )}
           </Route>
           <Route path="/staff/orders">
-            {this.state.isAuthenticated && this.state.userType != "customer" ? (
+            {this.state.isAuthenticated &&
+            this.state.userType !== "customer" ? (
               <ManageOrdersPage />
+            ) : (
+              <Redirect to="/login" />
+            )}
+          </Route>
+          <Route path="/staff/items">
+            {this.state.isAuthenticated &&
+            this.state.userType !== "customer" ? (
+              <ManageToysPage />
             ) : (
               <Redirect to="/login" />
             )}
