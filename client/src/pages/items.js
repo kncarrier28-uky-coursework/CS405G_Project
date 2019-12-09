@@ -29,12 +29,19 @@ class ItemsPage extends React.Component {
 
   render() {
     return (
-      <ItemList
-        userId={this.props.userId}
-        items={this.state.items}
-        refreshItems={this.fetchAllItems}
-        inCart={false}
-      />
+      <>
+        <div className="level">
+          <div className="level-item">
+            <p className="title">Toys</p>
+          </div>
+        </div>
+        <ItemList
+          userId={this.props.userId}
+          items={this.state.items}
+          refreshItems={this.fetchAllItems}
+          inCart={false}
+        />
+      </>
     );
   }
 }

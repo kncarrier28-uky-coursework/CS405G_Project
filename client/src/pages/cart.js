@@ -49,15 +49,24 @@ class CartPage extends React.Component {
       return <Redirect to={`order/${this.state.orderNumber}`} />;
     return (
       <div>
+        <div className="level">
+          <div className="level-item">
+            <p className="title">Cart</p>
+          </div>
+        </div>
         <div className="columns">
           <div className="column">
             <p className="title">Order Number: {this.state.orderNumber}</p>
           </div>
-          <div className="column is-narrow">
-            <button className="button is-primary" onClick={this.placeOrder}>
-              Place Order
-            </button>
-          </div>
+          {this.state.items.length === 0 ? (
+            <></>
+          ) : (
+            <div className="column is-narrow">
+              <button className="button is-primary" onClick={this.placeOrder}>
+                Place Order
+              </button>
+            </div>
+          )}
         </div>
         <ItemList
           items={this.state.items}

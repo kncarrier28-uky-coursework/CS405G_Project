@@ -25,7 +25,9 @@ router.post("/setSale", (req, res) => {
       console.log(err.message);
       res.status(500).json(err);
     }
-    const setSaleString = `UPDATE items SET saleAmount=${req.body.saleAmount} WHERE itemId=${req.body.itemId};`;
+    const setSaleString = `UPDATE items SET saleAmount=${
+      req.body.saleAmount === 0 ? 0 : req.body.saleAmount / 100
+    } WHERE itemId=${req.body.itemId};`;
     connection.query(setSaleString, function(error, results) {
       connection.release();
       if (error) {
