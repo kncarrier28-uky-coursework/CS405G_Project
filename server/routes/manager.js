@@ -64,10 +64,7 @@ router.post("/removeSale", (req, res) => {
 
 //Assumes req.body contains orderNumber
 router.get("/sales", (req, res) => {
-  const userId = req.query.userId | null;
-  const allOrdersString = `SELECT DISTINCT orderNumber, datePlaced FROM orders WHERE ${
-    userId ? `uID=${userId} AND` : ""
-  } status<>"open";`;
+  const allOrdersString = `SELECT DISTINCT orderNumber, datePlaced FROM orders WHERE status<>"open";`;
   pool.getConnection((err, connection) => {
     if (err) {
       console.log(err.message);
@@ -82,9 +79,8 @@ router.get("/sales", (req, res) => {
         results.forEach(order => {
           var totalSaleAmount = 0;
           order.datePlaced = ISODateString(order.datePlaced);
-          const allItemsString = `SELECT * FROM orders NATURAL JOIN items WHERE orderNumber="${orderNumber}";`;
+          const allItemsString = `SELECT * FROM orders NATURAL JOIN items WHERE orderNumber="${order.orderNumber}";`;
           connection.query(allItemsString, function(error, results) {
-            connection.release();
             if (error) {
               console.log(error.message);
               res.status(500).json(error);
@@ -101,6 +97,7 @@ router.get("/sales", (req, res) => {
           });
           totalSaleAmount = 0;
         });
+        connection.release();
         res.json(salesStats);
       }
     });
