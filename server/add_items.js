@@ -29,57 +29,57 @@ const item10_addString =
   'INSERT INTO items(itemId, itemName, stock, cost, saleAmount) VALUES (10, "Plush Dog", 30, 3, .5)';
 
 con.connect(function(err) {
-  if (err) throw err;
+  if (err) res.status(500).json(err);
   console.log("Connected.");
 });
 
 con.query(item1_addString, function(error, results) {
-  if (error) throw error;
+  if (error) res.status(500).json(error);
   else console.log("Item 1 added.");
 });
 
 con.query(item2_addString, function(error, results) {
-  if (error) throw error;
+  if (error) res.status(500).json(error);
   else console.log("Item 2 added.");
 });
 
 con.query(item3_addString, function(error, results) {
-  if (error) throw error;
+  if (error) res.status(500).json(error);
   else console.log("Item 3 added.");
 });
 
 con.query(item4_addString, function(error, results) {
-  if (error) throw error;
+  if (error) res.status(500).json(error);
   else console.log("Item 4 added.");
 });
 
 con.query(item5_addString, function(error, results) {
-  if (error) throw error;
+  if (error) res.status(500).json(error);
   else console.log("Item 5 added.");
 });
 
 con.query(item6_addString, function(error, results) {
-  if (error) throw error;
+  if (error) res.status(500).json(error);
   else console.log("Item 6 added.");
 });
 
 con.query(item7_addString, function(error, results) {
-  if (error) throw error;
+  if (error) res.status(500).json(error);
   else console.log("Item 7 added.");
 });
 
 con.query(item8_addString, function(error, results) {
-  if (error) throw error;
+  if (error) res.status(500).json(error);
   else console.log("Item 8 added.");
 });
 
 con.query(item9_addString, function(error, results) {
-  if (error) throw error;
+  if (error) res.status(500).json(error);
   else console.log("Item 9 added.");
 });
 
 con.query(item10_addString, function(error, results) {
-  if (error) throw error;
+  if (error) res.status(500).json(error);
   else console.log("Item 10 added.");
 });
 

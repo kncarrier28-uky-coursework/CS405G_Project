@@ -14,6 +14,7 @@ import OrderPage from "../pages/order";
 import OrdersPage from "../pages/orders";
 import ManageOrdersPage from "../pages/manageOrders";
 import ManageToysPage from "../pages/manageToys";
+import ManageSalesPage from "../pages/manageSales";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -133,6 +134,13 @@ export default class App extends React.Component {
             {this.state.isAuthenticated &&
             this.state.userType !== "customer" ? (
               <ManageToysPage />
+            ) : (
+              <Redirect to="/login" />
+            )}
+          </Route>
+          <Route path="/manager/sales">
+            {this.state.isAuthenticated && this.state.userType === "manager" ? (
+              <ManageSalesPage />
             ) : (
               <Redirect to="/login" />
             )}

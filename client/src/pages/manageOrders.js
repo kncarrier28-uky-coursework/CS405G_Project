@@ -119,6 +119,11 @@ class ManageOrdersPage extends React.Component {
       <>
         <div className="level">
           <div className="level-item">
+            <p className="title">Manage Orders</p>
+          </div>
+        </div>
+        <div className="level">
+          <div className="level-item">
             <button
               className="button is-link is-large"
               onClick={() => this.sortBy("all")}

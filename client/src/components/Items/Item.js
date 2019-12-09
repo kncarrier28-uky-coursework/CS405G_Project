@@ -40,8 +40,6 @@ export class Item extends React.Component {
       minimumFractionDigits: 2
     });
 
-    console.log(this.state.item.saleAmount);
-
     if (this.state.item.saleAmount !== 0) {
       saleView = (
         <div className="column is-size-5">

@@ -27,13 +27,13 @@ router.get("/", (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.log(err.message);
-      throw err;
+      res.status(500).json(err);
     }
     connection.query(allItemsString, function(error, results) {
       connection.release();
       if (error) {
         console.log(error.message);
-        throw error;
+        res.status(500).json(error);
       } else {
         results.forEach(order => {
           order.datePlaced = ISODateString(order.datePlaced);
@@ -51,13 +51,13 @@ router.get("/:orderNumber", (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.log(err.message);
-      throw err;
+      res.status(500).json(err);
     }
     connection.query(allItemsString, function(error, results) {
       connection.release();
       if (error) {
         console.log(error.message);
-        throw error;
+        res.status(500).json(error);
       } else {
         const orderInfo = {
           number: orderNumber,
@@ -85,14 +85,14 @@ router.post("/cancel", (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.log(err.message);
-      throw err;
+      res.status(500).json(err);
     }
     const cancelString = `UPDATE orders SET status = "canceled" WHERE orderNumber="${req.body.orderNumber}";`;
     connection.query(cancelString, function(error, results) {
       connection.release();
       if (error) {
         console.log(error.message);
-        throw error;
+        res.status(500).json(error);
       } else {
         console.log("Record changed.");
         res.end();
@@ -106,7 +106,7 @@ router.post("/pending", (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.log(err.message);
-      throw err;
+      res.status(500).json(err);
     }
     const currentDate = ISODateString(new Date());
     const pendingString = `UPDATE orders SET status = "pending", datePlaced = "${currentDate}" WHERE orderNumber="${req.body.orderNumber}";`;
@@ -127,14 +127,14 @@ router.post("/shipped", (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.log(err.message);
-      throw err;
+      res.status(500).json(err);
     }
     console.log("in ship");
     const getQuantities = `SELECT itemId, quantity FROM orders WHERE orderNumber="${req.body.orderNumber}";`;
     connection.query(getQuantities, function(error, results) {
       if (error) {
         console.log(error.message);
-        throw error;
+        res.status(500).json(error);
       }
       var items_needed = [];
       for (i = 0; i < results.length; i++) {
@@ -149,7 +149,7 @@ router.post("/shipped", (req, res) => {
       connection.query(getInventoryStock, function(error, results) {
         if (error) {
           console.log(error.message);
-          throw error;
+          res.status(500).json(error);
         }
         var items_missing = [];
         var cur_index = 0;
@@ -176,7 +176,7 @@ router.post("/shipped", (req, res) => {
             connection.query(updateStock, function(error, results) {
               if (error) {
                 console.log(error.message);
-                throw error;
+                res.status(500).json(error);
               }
             });
           }
@@ -185,7 +185,7 @@ router.post("/shipped", (req, res) => {
           connection.query(shippedString, function(error, reuslts) {
             if (error) {
               console.log(error.message);
-              throw error;
+              res.status(500).json(error);
             }
           });
         }

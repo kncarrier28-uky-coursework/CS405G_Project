@@ -39,14 +39,14 @@ router.get("/:itemId", (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) {
       console.log(err.message);
-      throw err;
+      res.status(500).json(err);
     }
     const queryString = `SELECT * FROM items WHERE itemId="${req.params.itemId}";`;
     connection.query(queryString, function(error, results) {
       connection.release();
       if (error) {
         console.log(error.message);
-        throw error;
+        res.status(500).json(error);
       } else {
         //send data to client using json string
         res.json(results[0]);

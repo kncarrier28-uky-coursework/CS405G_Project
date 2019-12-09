@@ -16,19 +16,19 @@ const createOrdersTableString =
   "CREATE TABLE orders (orderId INT PRIMARY KEY NOT NULL AUTO_INCREMENT,uId INT,itemId INT,status VARCHAR(20),quantity INT, orderNumber VARCHAR(15), datePlaced DATE);";
 
 con.connect(function(err) {
-  if (err) throw err;
+  if (err) res.status(500).json(err);
   console.log("Connected!");
 });
 
 con.query(createDBString, function(error, results) {
-  if (error) throw error;
+  if (error) res.status(500).json(error);
   else console.log("Database created!");
 });
 
 con.query(
   createItemsTableString + createUserTableString + createOrdersTableString,
   function(error, results) {
-    if (error) throw error;
+    if (error) res.status(500).json(error);
     else console.log("Tables created!");
   }
 );

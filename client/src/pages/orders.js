@@ -41,16 +41,23 @@ class OrdersPage extends React.Component {
       </tr>
     ));
     return (
-      <table className="table is-fullwidth">
-        <thead>
-          <tr>
-            <th>Order</th>
-            <th>Date Placed</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>{orderList}</tbody>
-      </table>
+      <>
+        <div className="level">
+          <div className="level-item">
+            <p className="title">My Orders</p>
+          </div>
+        </div>
+        <table className="table is-fullwidth">
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Date Placed</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>{orderList}</tbody>
+        </table>
+      </>
     );
   }
 }

@@ -27,7 +27,7 @@ router.use("/:userId*", (req, res, next) => {
         pool.getConnection((err, connection) => {
           connection.query(createCart, function(error, results) {
             connection.release();
-            if (error) throw error;
+            if (error) res.status(500).json(error);
             req.orderNumber = new_orderNum;
             next();
           });
@@ -72,7 +72,7 @@ router.post("/:userId/add", (req, res) => {
   const getExisting = `SELECT * FROM orders WHERE orderNumber="${orderNumber}";`;
   pool.getConnection((err, connection) => {
     connection.query(getExisting, function(error, results) {
-      if (error) throw error;
+      if (error) res.status(500).json(error);
       if (results.length === 1 && results[0].itemId === null) {
         const insertFirstItem = `UPDATE orders SET itemId=${itemId}, quantity=${quantity} WHERE orderNumber="${orderNumber}"`;
         connection.query(insertFirstItem, error => {
