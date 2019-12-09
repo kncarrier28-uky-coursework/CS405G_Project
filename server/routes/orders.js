@@ -113,7 +113,7 @@ router.post("/pending", (req, res) => {
     connection.query(pendingString, function(error, results) {
       if (error) {
         console.log(error.message);
-        throw error;
+        res.status(500).json(error);
       } else {
         console.log("Record changed.");
         res.end();

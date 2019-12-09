@@ -60,7 +60,8 @@ router.post("/addItem", (req, res) => {
   const item = req.params.itemName;
   const cost = req.params.cost;
   const stock = req.params.stock;
-  const queryString = 'INSERT INTO items (itemName, stock, cost) values ("${item}", "${stock}", "${cost}");';
+  const queryString =
+    'INSERT INTO items (itemName, stock, cost) values ("${item}", "${stock}", "${cost}");';
   pool.getConnection((err, connection) => {
     if (err) {
       console.log(err.message);
@@ -68,22 +69,21 @@ router.post("/addItem", (req, res) => {
     connection.query(queryString, function(error, results) {
       connection.release();
       if (error) {
+        res.status(500).json(error);
         console.log(error.message);
       } else {
         //send data to client using json string
-        res.json(results);
+        res.end();
       }
     });
   });
-
-  //send in array (json)
 });
 
 // req: itemId and new stock amount
-router.post("/addStock", (req, res) => {
-  const item = req.params.itemId;
-  const newStock = req.params.stock;
-  const queryString = 'UPDATE items SET stock="${newStock}" WHERE itemId="${item}";';
+router.post("/updateStock", (req, res) => {
+  const itemId = req.body.itemId;
+  const newStock = req.body.stock;
+  const queryString = `UPDATE items SET stock="${newStock}" WHERE itemId="${itemId}";`;
   pool.getConnection((err, connection) => {
     if (err) {
       console.log(err.message);
@@ -91,15 +91,14 @@ router.post("/addStock", (req, res) => {
     connection.query(queryString, function(error, results) {
       connection.release();
       if (error) {
+        res.status(500).json(error);
         console.log(error.message);
       } else {
         //send data to client using json string
-        res.json(results);
+        res.end();
       }
     });
   });
-
-  //send in array (json)
 });
 
 module.exports = router;
