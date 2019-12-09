@@ -19,7 +19,7 @@ router.get("/", function(req, res, next) {
 router.get("/:userId", function(req, res, next) {
   const userInfo = `SELECT uName, type FROM users WHERE uId=${req.params.userId};`;
   pool.getConnection((err, connection) => {
-    if (err) throw err;
+    if (err) res.status(500).json(err);
     connection.query(userInfo, function(error, results) {
       connection.release();
       if (error) console.log(error);

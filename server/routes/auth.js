@@ -24,9 +24,11 @@ router.post("/login", (req, res) => {
   pool.getConnection((err, connection) => {
     connection.query(queryString, function(error, results) {
       connection.release();
-      if (error) throw error;
+      if (error) res.status(500).json(error);
       if (results.length != 1)
-        res.json({ error: "No user with that username/password combination" });
+        res
+          .status(500)
+          .json({ error: "No user with that username/password combination" });
       else {
         var user = results[0];
         bcrypt.compare(userName + password, user.password, (err, result) => {
@@ -35,7 +37,6 @@ router.post("/login", (req, res) => {
               userId: user.uId,
               userType: user.type
             });
-
           } else {
             res.json({
               error: "Bad username password combo"
@@ -57,7 +58,7 @@ router.post("/register", function(req, res, next) {
       `SELECT uName FROM users WHERE uName="${req.body.userName}"`,
       function(error, results) {
         connection.release();
-        if (error) throw error;
+        if (error) res.status(500).json(error);
         if (results.length > 0)
           res.json({
             error: "User already exists."
@@ -72,7 +73,7 @@ router.post("/register", function(req, res, next) {
                   `INSERT INTO users(uName, password, type) VALUES ("${req.body.userName}", "${hash}", "customer")`,
                   function(error, results) {
                     connection.release();
-                    if (error) throw error;
+                    if (error) res.status(500).json(error);
                     type = "customer";
                     res.json({
                       userId: results.insertId,
