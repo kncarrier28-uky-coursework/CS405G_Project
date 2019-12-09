@@ -11,6 +11,13 @@ const pool = mysql.createPool({
 
 var router = express.Router();
 
+function ISODateString(d) {
+    function pad(n) {
+      return n < 10 ? "0" + n : n;
+    }
+    return d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate());
+  }
+
 //req.body should contain itemId and saleAmount
 router.post("/setSale", (req, res) => {
     pool.getConnection((err, connection) => {
@@ -53,6 +60,52 @@ router.post("/removeSale", (req, res) => {
             }
         });
     });
+});
+
+//Assumes req.body contains orderNumber
+router.get("/sales", (req, res) => {
+    const userId = req.query.userId | null;
+    const allOrdersString = `SELECT DISTINCT orderNumber, datePlaced FROM orders WHERE ${
+        userId ? `uID=${userId} AND` : ""
+    } status<>"open";`;
+    pool.getConnection((err, connection) => {
+        if (err) {
+            console.log(err.message);
+            throw err;
+        }
+        connection.query(allOrdersString, function(error, results) {
+            if (error) {
+                console.log(error.message);
+                throw error;
+            } else {
+                var salesStats = [];
+                results.forEach(order => {
+                    var totalSaleAmount = 0;
+                    order.datePlaced = ISODateString(order.datePlaced);
+                    const allItemsString = `SELECT * FROM orders NATURAL JOIN items WHERE orderNumber="${orderNumber}";`;
+                    connection.query(allItemsString, function(error, results) {
+                        connection.release();
+                        if (error) {
+                            console.log(error.message);
+                            throw error;
+                        }
+                        else {
+                            results.forEach(item => {
+                                totalSaleAmount += (item.cost - item.saleAmount);
+                            });
+                        }
+                    });
+                    salesStats.push({
+                        orderNumber: order.orderNumber,
+                        totalSale: totalSaleAmount,
+                        date: order.datePlaced
+                    });
+                    totalSaleAmount = 0;
+                });
+            res.json(salesStats);
+        }
+    });
+  });
 });
 
 module.exports = router;
