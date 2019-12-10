@@ -15,6 +15,16 @@ class ItemsPage extends React.Component {
     this.fetchAllItems = this.fetchAllItems.bind(this);
   }
 
+  handleChange(event) {
+    const target = event.target;
+    let value = target.value;
+    const name = target.name;
+
+    this.setState({
+      [name]: value
+    });
+  }
+  
   componentDidMount() {
     this.fetchAllItems();
   }
