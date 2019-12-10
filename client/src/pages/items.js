@@ -35,6 +35,26 @@ class ItemsPage extends React.Component {
             <p className="title">Toys</p>
           </div>
         </div>
+        <div className="field is-grouped">
+          <div className="field">
+            <label className="label">Search</label>
+            <div className="control">
+              <input 
+                className="input"
+                type="text"
+                name="searchQuery"
+                placeholder="Search by Category or Keyword"
+                onChange={this.handleChange}
+              />
+            </div>
+            <div className="control">
+              <label className="label">&nbsp;</label>
+              <button className="button is-primary" onClick={this.search}>
+                Search
+              </button>
+            </div>
+          </div>
+        </div>
         <ItemList
           userId={this.props.userId}
           items={this.state.items}
