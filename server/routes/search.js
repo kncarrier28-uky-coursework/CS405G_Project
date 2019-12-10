@@ -34,3 +34,5 @@ router.get("/:query", (req, res) => {
         });
     });
 });
+
+module.exports = router;
