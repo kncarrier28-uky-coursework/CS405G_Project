@@ -17,14 +17,19 @@ router.get("/:query", (req, res) => {
             console.log(err.message);
             res.status(500).json(err);
         }
-        const queryString = `SELECT * FROM items WHERE category="${req.params.query}" or keyword="${req.params.query}";`;
+        
+        var query = req.params.query.toLowerCase();
+        const queryString = `SELECT * FROM items WHERE category="${query}" or keyword="${req.params.query}";`;
         connection.query(queryString, function(error, results) {
             connection.release();
             if (error) {
                 console.log(error.message);
                 res.status(500).json(error);
             } else {
-                res.json(results);
+                if (results.length === 0) {
+                    res.json(0);
+                }
+                else res.json(results);
             }
         });
     });
