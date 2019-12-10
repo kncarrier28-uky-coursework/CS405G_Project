@@ -12,6 +12,7 @@ var staffRouter = require("./routes/staff");
 var authRouter = require("./routes/auth");
 var ordersRouter = require("./routes/orders");
 var itemsRouter = require("./routes/items");
+var searchRouter = require("./routes/search");
 var cartRouter = require("./routes/cart");
 
 var app = express();
@@ -33,6 +34,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/auth", authRouter);
 app.use("/items", itemsRouter);
+app.use("/search", searchRouter);
 app.use("/users", usersRouter);
 app.use("/manager", managerRouter);
 app.use("/staff", staffRouter);
