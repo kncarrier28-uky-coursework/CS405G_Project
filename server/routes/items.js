@@ -59,9 +59,10 @@ router.get("/:itemId", (req, res) => {
 router.post("/addItem", (req, res) => {
   const itemName = req.body.itemName;
   const category = req.body.category;
+  const keyword = req.body.keyword;
   const cost = req.body.cost;
   const stock = req.body.stock;
-  const queryString = `INSERT INTO items (itemName, category, stock, cost, saleAmount) values ("${itemName}", "${category}", ${stock}, ${cost}, 0);`;
+  const queryString = `INSERT INTO items (itemName, category, keyword, stock, cost, saleAmount) values ("${itemName}", "${category}", "${keyword}", ${stock}, ${cost}, 0);`;
   console.log(queryString);
   pool.getConnection((err, connection) => {
     if (err) {
