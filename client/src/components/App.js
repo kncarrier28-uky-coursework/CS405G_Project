@@ -17,6 +17,7 @@ import ManageToysPage from "../pages/manageToys";
 import ManageSalesPage from "../pages/manageSales";
 import ManageUsersPage from "../pages/manageUsers";
 import SalesDataPage from "../pages/salesData";
+import SearchPage from "../pages/SearchPage";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -105,6 +106,13 @@ export default class App extends React.Component {
           <Route path="/items">
             {this.state.isAuthenticated ? (
               <ItemsPage userId={this.state.userId} />
+            ) : (
+              <Redirect to="/login" />
+            )}
+          </Route>
+          <Route path="/search">
+            {this.state.isAuthenticated ? (
+              <SearchPage userId={this.state.userId} />
             ) : (
               <Redirect to="/login" />
             )}
