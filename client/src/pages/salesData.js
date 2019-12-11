@@ -42,7 +42,9 @@ class SalesDataPage extends React.Component {
       currentDate.setDate(today.getDate() - 7);
     } else if (salesPeriod === "month")
       currentDate.setMonth(today.getMonth() - 1);
-    else if (salesPeriod === "year") currentDate.setYear(today.getYear() - 1);
+    else if (salesPeriod === "year") {
+      currentDate.setYear(today.getFullYear() - 1);
+    }
     while (currentDate < today) {
       let nextDay = currentDate;
       nextDay.setDate(currentDate.getDate() + 1);
@@ -95,7 +97,10 @@ class SalesDataPage extends React.Component {
           <div className="level-item">
             <button
               className="button is-link is-large"
-              onClick={() => this.createDateRange("week")}
+              onClick={() => {
+                this.createDateRange("week");
+                this.setState({ salesPeriod: "week" });
+              }}
             >
               Past Week Sales
             </button>
@@ -103,7 +108,10 @@ class SalesDataPage extends React.Component {
           <div className="level-item">
             <button
               className="button is-link is-large"
-              onClick={() => this.createDateRange("month")}
+              onClick={() => {
+                this.createDateRange("month");
+                this.setState({ salesPeriod: "month" });
+              }}
             >
               Past Month Sales
             </button>
@@ -111,7 +119,10 @@ class SalesDataPage extends React.Component {
           <div className="level-item">
             <button
               className="button is-link is-large"
-              onClick={() => this.createDateRange("year")}
+              onClick={() => {
+                this.createDateRange("year");
+                this.setState({ salesPeriod: "year" });
+              }}
             >
               Past Year Sales
             </button>
