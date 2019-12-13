@@ -132,7 +132,11 @@ class SalesDataPage extends React.Component {
                 type: "bar",
                 data: this.state.chartData
               }
-            ]
+            ],
+            tooltip: {},
+            legend: {
+              data: ["Sales"]
+            }
           }}
         />
       </>
