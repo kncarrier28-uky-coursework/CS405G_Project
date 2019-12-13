@@ -64,7 +64,7 @@ router.post("/removeSale", (req, res) => {
 
 //Assumes req.body contains orderNumber
 router.get("/sales", (req, res) => {
-  const allOrdersString = `SELECT DISTINCT orderNumber, datePlaced FROM orders WHERE status<>"open";`;
+  const allOrdersString = `SELECT DISTINCT orderNumber, datePlaced, status FROM orders WHERE status<>"open";`;
   pool.getConnection((err, connection) => {
     if (err) {
       console.log(err.message);
@@ -93,7 +93,8 @@ router.get("/sales", (req, res) => {
           salesStats.push({
             orderNumber: order.orderNumber,
             totalSale: totalSaleAmount,
-            date: order.datePlaced
+            date: order.datePlaced,
+            status: order.status
           });
           totalSaleAmount = 0;
         });

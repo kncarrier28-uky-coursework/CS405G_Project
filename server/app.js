@@ -12,7 +12,6 @@ var staffRouter = require("./routes/staff");
 var authRouter = require("./routes/auth");
 var ordersRouter = require("./routes/orders");
 var itemsRouter = require("./routes/items");
-var searchRouter = require("./routes/search");
 var cartRouter = require("./routes/cart");
 
 var app = express();
