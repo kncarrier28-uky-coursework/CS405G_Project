@@ -17,6 +17,9 @@ class SalesDataPage extends React.Component {
 
     this.state = {
       sales: [],
+      shippedSales: [],
+      canceledSales: [],
+      pendingSales: [],
       dates: [],
       chartData: [],
       salesPeriod: "week"
@@ -71,6 +74,34 @@ class SalesDataPage extends React.Component {
         }
       });
       this.setState({ chartData: data });
+    });
+    let canceldata = new Array(this.state.dates.length).fill(0);
+    this.state.dates.forEach((date, index) => {
+      this.state.sales.forEach(sale => {
+        if (sale.date === date && sale.status === "canceled") {
+          canceldata[index]++;
+        }
+      });
+      this.setState({ canceledSales: canceldata });
+    });
+    let shippeddata = new Array(this.state.dates.length).fill(0);
+    this.state.dates.forEach((date, index) => {
+      this.state.sales.forEach(sale => {
+        console.log(sale);
+        if (sale.date === date && sale.status === "shipped") {
+          shippeddata[index]++;
+        }
+      });
+      this.setState({ shippedSales: shippeddata });
+    });
+    let pendingdata = new Array(this.state.dates.length).fill(0);
+    this.state.dates.forEach((date, index) => {
+      this.state.sales.forEach(sale => {
+        if (sale.date === date && sale.status === "pending") {
+          pendingdata[index]++;
+        }
+      });
+      this.setState({ pendingSales: pendingdata });
     });
   }
 
@@ -139,11 +170,35 @@ class SalesDataPage extends React.Component {
             yAxis: {},
             series: [
               {
-                name: "Sales",
+                name: "All Sales",
                 type: "bar",
                 data: this.state.chartData
+              },
+              {
+                name: "Canceled Sales",
+                type: "bar",
+                data: this.state.canceledSales
+              },
+              {
+                name: "Shipped Sales",
+                type: "bar",
+                data: this.state.shippedSales
+              },
+              {
+                name: "Pending Sales",
+                type: "bar",
+                data: this.state.pendingSales
               }
-            ]
+            ],
+            tooltip: {},
+            legend: {
+              data: [
+                "All Sales",
+                "Canceled Sales",
+                "Shipped Sales",
+                "Pending Sales"
+              ]
+            }
           }}
         />
       </>

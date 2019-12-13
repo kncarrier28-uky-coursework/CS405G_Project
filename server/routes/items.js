@@ -16,7 +16,11 @@ const pool = mysql.createPool({
 var router = express.Router();
 
 router.get("/", (req, res) => {
-  const queryString = "SELECT * FROM items;"; //all rows in items database
+  const queryString = `SELECT * FROM items ${
+    req.query.searchTerm
+      ? `WHERE keyword="${req.query.searchTerm}" OR category="${req.query.searchTerm}"`
+      : ""
+  };`; //all rows in items database
   pool.getConnection((err, connection) => {
     if (err) {
       console.log(err.message);
@@ -58,9 +62,11 @@ router.get("/:itemId", (req, res) => {
 // req: itemName, cost, stock
 router.post("/addItem", (req, res) => {
   const itemName = req.body.itemName;
+  const category = req.body.category;
+  const keyword = req.body.keyword;
   const cost = req.body.cost;
   const stock = req.body.stock;
-  const queryString = `INSERT INTO items (itemName, stock, cost, saleAmount) values ("${itemName}", ${stock}, ${cost}, 0);`;
+  const queryString = `INSERT INTO items (itemName, category, keyword, stock, cost, saleAmount) values ("${itemName}", "${category}", "${keyword}", ${stock}, ${cost}, 0);`;
   console.log(queryString);
   pool.getConnection((err, connection) => {
     if (err) {

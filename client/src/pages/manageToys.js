@@ -10,6 +10,8 @@ class ManageToysPage extends React.Component {
 
     this.state = {
       itemName: "",
+      category: "",
+      keyword: "",
       cost: 0,
       stock: 0,
       redirect: false
@@ -40,6 +42,8 @@ class ManageToysPage extends React.Component {
       },
       body: JSON.stringify({
         itemName: this.state.itemName,
+        category: this.state.itemCategory,
+        keyword: this.state.keyword,
         cost: this.state.cost,
         stock: this.state.stock
       })
@@ -65,6 +69,32 @@ class ManageToysPage extends React.Component {
               placeholder="New Item Name"
               onChange={this.handleChange}
             />
+          </div>
+        </div>
+        <div className="field is-grouped">
+          <div className="field">
+            <label className="label">Item Category</label>
+            <div className="control">
+              <input
+                className="input"
+                type="text"
+                name="itemCategory"
+                placeholder="Item Category"
+                onChange={this.handleChange}
+              />
+            </div>
+          </div>
+          <div className="field">
+            <label className="label">Search Keyword</label>
+            <div className="control">
+              <input 
+                className="input"
+                type="text"
+                name="keyword"
+                placeholder="Keyword"
+                onChange={this.handleChange}
+              />
+            </div>
           </div>
         </div>
         <div className="field is-grouped">
