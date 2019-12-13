@@ -110,13 +110,6 @@ export default class App extends React.Component {
               <Redirect to="/login" />
             )}
           </Route>
-          <Route path="/search">
-            {this.state.isAuthenticated ? (
-              <SearchPage userId={this.state.userId} />
-            ) : (
-              <Redirect to="/login" />
-            )}
-          </Route>
           <Route path="/cart">
             {this.state.isAuthenticated ? (
               <CartPage userId={this.state.userId} />

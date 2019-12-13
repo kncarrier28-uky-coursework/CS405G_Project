@@ -16,7 +16,11 @@ const pool = mysql.createPool({
 var router = express.Router();
 
 router.get("/", (req, res) => {
-  const queryString = "SELECT * FROM items;"; //all rows in items database
+  const queryString = `SELECT * FROM items ${
+    req.query.searchTerm
+      ? `WHERE keyword="${req.query.searchTerm}" OR category="${req.query.searchTerm}"`
+      : ""
+  };`; //all rows in items database
   pool.getConnection((err, connection) => {
     if (err) {
       console.log(err.message);
