@@ -22,7 +22,8 @@ class SalesDataPage extends React.Component {
       pendingSales: [],
       dates: [],
       chartData: [],
-      salesPeriod: "week"
+      salesPeriod: "week",
+      graphType: "bar"
     };
 
     this.createDateRange = this.createDateRange.bind(this);
@@ -171,22 +172,22 @@ class SalesDataPage extends React.Component {
             series: [
               {
                 name: "All Sales",
-                type: "bar",
+                type: this.state.graphType === "line" ? "line" : "bar",
                 data: this.state.chartData
               },
               {
                 name: "Canceled Sales",
-                type: "bar",
+                type: this.state.graphType === "line" ? "line" : "bar",
                 data: this.state.canceledSales
               },
               {
                 name: "Shipped Sales",
-                type: "bar",
+                type: this.state.graphType === "line" ? "line" : "bar",
                 data: this.state.shippedSales
               },
               {
                 name: "Pending Sales",
-                type: "bar",
+                type: this.state.graphType === "line" ? "line" : "bar",
                 data: this.state.pendingSales
               }
             ],
@@ -201,6 +202,28 @@ class SalesDataPage extends React.Component {
             }
           }}
         />
+        <div className="level">
+          <div className="level-item">
+            <button
+              className="button is-link"
+              onClick={() => {
+                this.setState({ graphType: "bar" });
+              }}
+            >
+              Bar Graph
+            </button>
+          </div>
+          <div className="level-item">
+            <button
+              className="button is-link"
+              onClick={() => {
+                this.setState({ graphType: "line" });
+              }}
+            >
+              Line Graph
+            </button>
+          </div>
+        </div>
       </>
     );
   }
