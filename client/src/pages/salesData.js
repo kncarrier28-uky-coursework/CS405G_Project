@@ -167,27 +167,34 @@ class SalesDataPage extends React.Component {
             xAxis: {
               data: this.state.dates
             },
-            yAxis: {},
+            yAxis: {
+              type: "value",
+              minInterval: 1
+            },
             series: [
               {
                 name: "All Sales",
                 type: this.state.graphType === "line" ? "line" : "bar",
-                data: this.state.chartData
+                data: this.state.chartData,
+                smooth: true
               },
               {
                 name: "Canceled Sales",
                 type: this.state.graphType === "line" ? "line" : "bar",
-                data: this.state.canceledSales
+                data: this.state.canceledSales,
+                smooth: true
               },
               {
                 name: "Shipped Sales",
                 type: this.state.graphType === "line" ? "line" : "bar",
-                data: this.state.shippedSales
+                data: this.state.shippedSales,
+                smooth: true
               },
               {
                 name: "Pending Sales",
                 type: this.state.graphType === "line" ? "line" : "bar",
-                data: this.state.pendingSales
+                data: this.state.pendingSales,
+                smooth: true
               }
             ],
             tooltip: {},
