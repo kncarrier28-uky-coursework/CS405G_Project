@@ -88,7 +88,6 @@ class SalesDataPage extends React.Component {
     let shippeddata = new Array(this.state.dates.length).fill(0);
     this.state.dates.forEach((date, index) => {
       this.state.sales.forEach(sale => {
-        console.log(sale);
         if (sale.date === date && sale.status === "shipped") {
           shippeddata[index]++;
         }
