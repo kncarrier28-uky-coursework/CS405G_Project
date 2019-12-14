@@ -72,29 +72,25 @@ class ManageToysPage extends React.Component {
           </div>
         </div>
         <div className="field is-grouped">
-          <div className="field">
+          <div className="control is-expanded">
             <label className="label">Item Category</label>
-            <div className="control">
-              <input
-                className="input"
-                type="text"
-                name="itemCategory"
-                placeholder="Item Category"
-                onChange={this.handleChange}
-              />
-            </div>
+            <input
+              className="input"
+              type="text"
+              name="itemCategory"
+              placeholder="Item Category"
+              onChange={this.handleChange}
+            />
           </div>
-          <div className="field">
+          <div className="control is-expanded"> 
             <label className="label">Search Keyword</label>
-            <div className="control">
-              <input 
-                className="input"
-                type="text"
-                name="keyword"
-                placeholder="Keyword"
-                onChange={this.handleChange}
-              />
-            </div>
+            <input 
+              className="input"
+              type="text"
+              name="keyword"
+              placeholder="Keyword"
+              onChange={this.handleChange}
+            />
           </div>
         </div>
         <div className="field is-grouped">
