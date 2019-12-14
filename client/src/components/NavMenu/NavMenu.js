@@ -52,11 +52,6 @@ export class NavMenu extends React.Component {
                   Home
                 </Link>
               </Navbar.Item>
-              <Navbar.Item renderAs="div" className="has-text-weight-semibold">
-                <Link to="/search" className="has-text-light">
-                  Search
-                </Link>
-              </Navbar.Item>
               {this.state.userType === "staff" ||
               this.state.userType === "manager" ? (
                 <>
